@@ -13,7 +13,7 @@ jobs:
       - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: night
+          toolchain: nightly
           default: true
           override: true
 
@@ -39,7 +39,7 @@ jobs:
       - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: night
+          toolchain: nightly
           default: true
           override: true
 
