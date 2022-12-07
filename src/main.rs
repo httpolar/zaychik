@@ -1,5 +1,6 @@
 mod commands;
 mod config;
+mod utils;
 
 use commands::get_commands;
 use config::AppConfig;
