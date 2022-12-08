@@ -1,7 +1,7 @@
 use crate::{Context, Error};
 use rand::Rng;
 
-// Generates a random integer
+/// Generates a random integer
 #[poise::command(slash_command, prefix_command)]
 pub async fn random(
     ctx: Context<'_>,
@@ -32,3 +32,6 @@ pub async fn random(
 
     Ok(())
 }
+
+
+
