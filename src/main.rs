@@ -4,12 +4,16 @@ mod structs;
 mod utils;
 
 use commands::get_commands;
-use config::AppConfig;
+use config::{ApiKeys, AppConfig};
 use poise::serenity_prelude as serenity;
 
-pub struct Data {}
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
+
+pub struct Data {
+    keys: ApiKeys,
+    reqwest: reqwest::Client,
+}
 
 async fn event_handler(
     _ctx: &serenity::Context,
@@ -45,7 +49,10 @@ async fn main() {
         .setup(|ctx, _ready, framework| {
             Box::pin(async move {
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
-                Ok(Data {})
+                Ok(Data {
+                    keys: config.apis,
+                    reqwest: reqwest::Client::new(),
+                })
             })
         });
 
