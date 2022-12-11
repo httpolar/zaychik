@@ -19,7 +19,7 @@ jobs:
           override: true
 
       - name: Build
-        run: cargo build --all --release && strip target/release/zaychik && mv target/release/zaychik target/release/zaychik_amd64
+        run: cargo build --all --release
 
       - name: Release
         uses: softprops/action-gh-release@v1
