@@ -66,7 +66,18 @@ pub async fn sauce(
         response = format!("{response}{}\n", row);
     }
 
-    ctx.say(response).await?;
+    ctx.send(|r| {
+        r.embed(|e| {
+            e.image(&image.url)
+                .title("Searching for source of the image")
+        })
+        .embed(|e| {
+            e.title("Search results")
+                .description(response)
+                .footer(|footer| footer.text("Powered by saucenao.com"))
+        })
+    })
+    .await?;
 
     Ok(())
 }
