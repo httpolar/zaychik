@@ -32,6 +32,3 @@ pub async fn random(
 
     Ok(())
 }
-
-
-
