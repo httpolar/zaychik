@@ -1,5 +1,6 @@
 mod commands;
 mod config;
+mod structs;
 mod utils;
 
 use commands::get_commands;
