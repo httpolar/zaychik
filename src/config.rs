@@ -6,8 +6,14 @@ use figment::{
 };
 
 #[derive(Debug, Deserialize)]
+pub struct ApiKeys { 
+    pub saucenao: String,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct AppConfig {
     pub token: String,
+    pub apis: ApiKeys,
 }
 
 impl AppConfig {
