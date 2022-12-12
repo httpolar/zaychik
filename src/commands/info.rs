@@ -15,7 +15,7 @@ pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
 #[poise::command(slash_command, prefix_command)]
 pub async fn avatar(
     ctx: Context<'_>,
-    #[description = "Some discord user you want to look up"] user: Option<serenity::UserId>,
+    #[description = "Some discord user you want to look up"] user: serenity::UserId,
     #[description = "If you'd like to hide command output"] hidden: Option<bool>,
 ) -> Result<(), Error> {
     match hidden {
@@ -23,11 +23,7 @@ pub async fn avatar(
         _ => ctx.defer().await?,
     }
 
-    let user = match user {
-        Some(user_id) => serenity::User::from_id(ctx.http(), user_id).await?,
-        _ => ctx.author().clone(),
-    };
-
+    let user = serenity::User::from_id(ctx.http(), user).await?;
     let avatar_url = user
         .avatar_url()
         .unwrap_or_else(|| user.default_avatar_url());
@@ -42,7 +38,7 @@ pub async fn avatar(
 #[poise::command(slash_command, prefix_command)]
 pub async fn userinfo(
     ctx: Context<'_>,
-    #[description = "Some discord user you want to look up"] user: Option<serenity::UserId>,
+    #[description = "Some discord user you want to look up"] user: serenity::UserId,
     #[description = "If you'd like to hide command output"] hidden: Option<bool>,
 ) -> Result<(), Error> {
     match hidden {
@@ -50,11 +46,7 @@ pub async fn userinfo(
         _ => ctx.defer().await?,
     }
 
-    let user = match user {
-        Some(user_id) => serenity::User::from_id(ctx.http(), user_id).await?,
-        _ => ctx.author().clone(),
-    };
-
+    let user = serenity::User::from_id(ctx.http(), user).await?;
     let avatar_url = user.face();
     let registered_human_readable = format!("<t:{}:F>", user.created_at().timestamp());
 
