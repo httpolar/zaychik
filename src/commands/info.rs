@@ -2,7 +2,6 @@ use poise::serenity_prelude::{self as serenity, CacheHttp};
 
 use crate::{utils::UserFromUserId, Context, Error};
 
-
 /// Test if the bot is online
 #[poise::command(slash_command, prefix_command)]
 pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
@@ -12,7 +11,6 @@ pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
     Ok(())
 }
 
-
 /// Shows your or someone else's avatar
 #[poise::command(slash_command, prefix_command)]
 pub async fn avatar(
@@ -20,7 +18,11 @@ pub async fn avatar(
     #[description = "Some discord user you want to look up"] user: Option<serenity::UserId>,
     #[description = "If you'd like to hide command output"] hidden: Option<bool>,
 ) -> Result<(), Error> {
-    let hidden = hidden.unwrap_or_else(|| false);
+    match hidden {
+        Some(true) => ctx.defer_ephemeral().await?,
+        _ => ctx.defer().await?,
+    }
+
     let user = match user {
         Some(user_id) => serenity::User::from_id(ctx.http(), user_id).await?,
         _ => ctx.author().clone(),
@@ -31,12 +33,10 @@ pub async fn avatar(
         .unwrap_or_else(|| user.default_avatar_url());
     let msg = format!("{}'s avatar: {avatar_url}", user.name);
 
-    ctx.send(|reply| reply.ephemeral(hidden).content(msg))
-        .await?;
+    ctx.say(msg).await?;
 
     Ok(())
 }
-
 
 /// Shows some base info about Discord users
 #[poise::command(slash_command, prefix_command)]
@@ -45,7 +45,11 @@ pub async fn userinfo(
     #[description = "Some discord user you want to look up"] user: Option<serenity::UserId>,
     #[description = "If you'd like to hide command output"] hidden: Option<bool>,
 ) -> Result<(), Error> {
-    let hidden = hidden.unwrap_or(false);
+    match hidden {
+        Some(true) => ctx.defer_ephemeral().await?,
+        _ => ctx.defer().await?,
+    }
+
     let user = match user {
         Some(user_id) => serenity::User::from_id(ctx.http(), user_id).await?,
         _ => ctx.author().clone(),
@@ -55,7 +59,7 @@ pub async fn userinfo(
     let registered_human_readable = format!("<t:{}:F>", user.created_at().timestamp());
 
     ctx.send(|reply| {
-        reply.ephemeral(hidden).embed(|e| {
+        reply.embed(|e| {
             e.title(format!("Discord user {}", &user.name));
             e.thumbnail(&avatar_url);
             e.field("Discord Tag", format!("{}", &user.tag()), true);
