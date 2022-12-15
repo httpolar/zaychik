@@ -33,7 +33,7 @@ pub async fn sauce(
     let data: SearchResponse = client.get(url).send().await?.json().await?;
 
     let mut response = String::new();
-    for (entry, idx) in data.results.iter().zip(0..) {
+    for (entry, idx) in data.results.iter().zip(0u8..) {
         let is_credible = entry.is_credible().unwrap_or(false);
         if show_low_similarity == false && is_credible == false {
             continue;
@@ -44,23 +44,10 @@ pub async fn sauce(
         }
 
         let similarity = format!("(`{:.2}`% similarity)", entry.header.similarity_as_f64()?);
-
-        let url = match entry.data.ext_urls.as_ref().unwrap().get(0) {
-            Some(v) => {
-                let mut result = String::new();
-                if !is_credible || idx != 0 {
-                    result.push_str("<");
-                }
-
-                result.push_str(v);
-
-                if !is_credible || idx != 0 {
-                    result.push_str(">");
-                }
-
-                result
-            }
-            _ => "".to_string(),
+        let url = if let Some(ref s) = entry.data.ext_urls {
+            s.get(0).unwrap().to_owned()
+        } else {
+            "".into()
         };
 
         let row = format!("#{} {}: {} ", idx + 1, similarity, url);
