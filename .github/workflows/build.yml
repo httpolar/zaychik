@@ -1,6 +1,9 @@
 name: Build Zaychik!
 
-on: [push]
+on:
+  push:
+    tags:
+      - '*'
 
 jobs:
   build-linux:
