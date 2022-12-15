@@ -39,13 +39,13 @@ pub async fn sauce(
             continue;
         }
 
-        if entry.data.ext_urls.as_ref().is_none() {
+        if entry.data.ext_urls.is_empty() {
             continue;
         }
 
         let similarity = format!("(`{:.2}`% similarity)", entry.header.similarity_as_f64()?);
-        let url = if let Some(ref s) = entry.data.ext_urls {
-            s.get(0).unwrap().to_owned()
+        let url: String = if let Some(s) = entry.data.ext_urls.get(0) {
+            s.into()
         } else {
             "".into()
         };

@@ -19,9 +19,10 @@ impl ResultEntryHeader {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Default)]
 pub struct ResultEntryData {
-    pub ext_urls: Option<Vec<String>>,
+    #[serde(default)]
+    pub ext_urls: Vec<String>,
     pub title: Option<String>,
     pub pixiv_id: Option<u32>,
     pub yandere_id: Option<u32>,
