@@ -1,4 +1,5 @@
-use crate::{Context, Error};
+use crate::prelude::Context;
+use anyhow::Result;
 use rand::Rng;
 
 /// Generates a random integer
@@ -8,7 +9,7 @@ pub async fn random(
     #[description = "Lower bound (inclusive)"] min: Option<i64>,
     #[description = "Upper bound (inclusive)"] max: Option<i64>,
     #[description = "If you'd like to hide command output"] hidden: Option<bool>,
-) -> Result<(), Error> {
+) -> Result<()> {
     match hidden {
         Some(true) => ctx.defer_ephemeral().await?,
         _ => ctx.defer().await?,
@@ -18,7 +19,8 @@ pub async fn random(
     let max: i64 = max.unwrap_or(100);
 
     if min > max {
-        ctx.say("Minimum number can not be bigger than maximum!").await?;
+        ctx.say("Minimum number can not be bigger than maximum!")
+            .await?;
         return Ok(());
     }
 

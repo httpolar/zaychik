@@ -1,7 +1,7 @@
+use crate::prelude::StdResult;
+use anyhow::Result;
 use serde::Deserialize;
 use std::{cmp::Ordering, num::ParseFloatError};
-
-type Err = Box<dyn std::error::Error>;
 
 #[derive(Debug, Deserialize)]
 pub struct ResultEntryHeader {
@@ -14,7 +14,7 @@ pub struct ResultEntryHeader {
 }
 
 impl ResultEntryHeader {
-    pub fn similarity_as_f64(&self) -> Result<f64, ParseFloatError> {
+    pub fn similarity_as_f64(&self) -> StdResult<f64, ParseFloatError> {
         self.similarity.parse()
     }
 }
@@ -40,7 +40,7 @@ pub struct ResultEntry {
 
 impl ResultEntry {
     /// Checks if saucenao is confident in the result or not
-    pub fn is_credible(&self) -> Result<bool, Err> {
+    pub fn is_credible(&self) -> Result<bool> {
         let similarity = self.header.similarity_as_f64()?;
 
         match similarity.partial_cmp(&89.0) {

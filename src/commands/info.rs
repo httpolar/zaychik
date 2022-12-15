@@ -1,10 +1,11 @@
+use crate::prelude::Context;
+use crate::utils::UserFromUserId;
+use anyhow::Result;
 use poise::serenity_prelude::{self as serenity, CacheHttp};
-
-use crate::{utils::UserFromUserId, Context, Error};
 
 /// Test if the bot is online
 #[poise::command(slash_command, prefix_command)]
-pub async fn ping(ctx: Context<'_>) -> Result<(), Error> {
+pub async fn ping(ctx: Context<'_>) -> Result<()> {
     ctx.send(|reply| reply.ephemeral(true).content("Pong!"))
         .await?;
 
@@ -17,7 +18,7 @@ pub async fn avatar(
     ctx: Context<'_>,
     #[description = "Some discord user you want to look up"] user: serenity::UserId,
     #[description = "If you'd like to hide command output"] hidden: Option<bool>,
-) -> Result<(), Error> {
+) -> Result<()> {
     match hidden {
         Some(true) => ctx.defer_ephemeral().await?,
         _ => ctx.defer().await?,
@@ -40,7 +41,7 @@ pub async fn userinfo(
     ctx: Context<'_>,
     #[description = "Some discord user you want to look up"] user: serenity::UserId,
     #[description = "If you'd like to hide command output"] hidden: Option<bool>,
-) -> Result<(), Error> {
+) -> Result<()> {
     match hidden {
         Some(true) => ctx.defer_ephemeral().await?,
         _ => ctx.defer().await?,

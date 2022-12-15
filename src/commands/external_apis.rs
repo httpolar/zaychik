@@ -1,7 +1,8 @@
+use crate::prelude::Context;
+use crate::structs::saucenao::SearchResponse;
+use anyhow::Result;
 use poise::serenity_prelude::Attachment;
 use reqwest;
-
-use crate::{structs::saucenao::SearchResponse, Context, Error};
 
 const SAUCENAO_SEARCH: &'static str =
     "https://saucenao.com/search.php?output_type=2&numres=10&dedupe=2";
@@ -13,7 +14,7 @@ pub async fn sauce(
     image: Attachment,
     #[description = "If you want to see low similarity results"] show_low_similarity: Option<bool>,
     #[description = "If you'd like to hide command output"] hidden: Option<bool>,
-) -> Result<(), Error> {
+) -> Result<()> {
     let show_low_similarity = show_low_similarity.unwrap_or(false);
 
     match hidden {

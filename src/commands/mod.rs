@@ -2,7 +2,7 @@ mod external_apis;
 mod info;
 mod random;
 
-pub async fn get_commands() -> Vec<poise::Command<crate::Data, crate::Error>> {
+pub async fn get_commands() -> Vec<poise::Command<crate::Data, anyhow::Error>> {
     vec![
         self::info::avatar(),
         self::info::userinfo(),

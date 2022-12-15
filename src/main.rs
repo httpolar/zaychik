@@ -1,14 +1,13 @@
 mod commands;
 mod config;
+mod prelude;
 mod structs;
 mod utils;
 
+use anyhow::{Error, Result};
 use commands::get_commands;
 use config::{ApiKeys, AppConfig};
 use poise::serenity_prelude as serenity;
-
-type Error = Box<dyn std::error::Error + Send + Sync>;
-type Context<'a> = poise::Context<'a, Data, Error>;
 
 pub struct Data {
     keys: ApiKeys,
@@ -20,7 +19,7 @@ async fn event_handler(
     event: &poise::Event<'_>,
     _framework: poise::FrameworkContext<'_, Data, Error>,
     _state: &Data,
-) -> Result<(), Error> {
+) -> Result<()> {
     match event {
         poise::Event::Ready { data_about_bot } => {
             println!("{} is ready!", data_about_bot.user.name)
