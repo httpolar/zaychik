@@ -2,9 +2,8 @@ use crate::prelude::Context;
 use crate::structs::saucenao::SearchResponse;
 use anyhow::Result;
 use poise::serenity_prelude::Attachment;
-use reqwest;
 
-const SAUCENAO_SEARCH: &'static str =
+const SAUCENAO_SEARCH: &str =
     "https://saucenao.com/search.php?output_type=2&numres=10&dedupe=2";
 
 /// Reverse image search via saucenao
@@ -35,7 +34,7 @@ pub async fn sauce(
     let mut response = String::new();
     for (entry, idx) in data.results.iter().zip(0u8..) {
         let is_credible = entry.is_credible().unwrap_or(false);
-        if show_low_similarity == false && is_credible == false {
+        if !show_low_similarity && !is_credible {
             continue;
         }
 
@@ -51,7 +50,7 @@ pub async fn sauce(
         };
 
         let row = format!("#{} {}: {} ", idx + 1, similarity, url);
-        response = format!("{response}{}\n", row);
+        response = format!("{response}{row}\n");
     }
 
     ctx.send(|r| {

@@ -55,7 +55,7 @@ pub async fn userinfo(
         reply.embed(|e| {
             e.title(format!("Discord user {}", &user.name));
             e.thumbnail(&avatar_url);
-            e.field("Discord Tag", format!("{}", &user.tag()), true);
+            e.field("Discord Tag", &user.tag(), true);
             e.field("ID", format!("{}", &user.id), true);
             e.field("Avatar", format!("[Avatar URL]({})", &avatar_url), true);
             e.field("Registered At", &registered_human_readable, true);
