@@ -28,6 +28,11 @@ async fn event_handler(
             println!("{} is ready!", data_about_bot.user.name)
         }
 
+        poise::Event::GuildCreate { guild, is_new } => {
+            let special_char = if *is_new { '+' } else { '*' };
+            println!("{special_char} guild {}", guild.name,)
+        }
+
         _ => (),
     }
 
