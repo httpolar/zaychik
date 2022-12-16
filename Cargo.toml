@@ -2,7 +2,7 @@ cargo-features = ["profile-rustflags"]
 
 [package]
 name = "zaychik"
-version = "0.0.14"
+version = "0.0.15"
 edition = "2021"
 
 [profile.release]
