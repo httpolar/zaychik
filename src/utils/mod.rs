@@ -1,3 +1,5 @@
+pub mod paginator;
+
 use poise::serenity_prelude::{Http, User, UserId};
 
 // This trait might become useless once this gets fixed - https://github.com/serenity-rs/serenity/issues/2302
