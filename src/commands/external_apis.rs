@@ -3,8 +3,7 @@ use crate::structs::saucenao::SearchResponse;
 use anyhow::Result;
 use poise::serenity_prelude::Attachment;
 
-const SAUCENAO_SEARCH: &str =
-    "https://saucenao.com/search.php?output_type=2&numres=10&dedupe=2";
+const SAUCENAO_SEARCH: &str = "https://saucenao.com/search.php?output_type=2&numres=10&dedupe=2";
 
 /// Reverse image search via saucenao
 #[poise::command(slash_command)]
