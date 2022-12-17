@@ -3,7 +3,10 @@ cargo-features = ["profile-rustflags"]
 [package]
 name = "zaychik"
 version = "0.0.15"
+publish = false
+rust-version = "1.68"
 edition = "2021"
+authors = ["TenkoSpirit"]
 
 [profile.release]
 rustflags = ["-C", "strip=symbols"]
