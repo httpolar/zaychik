@@ -52,7 +52,7 @@ pub async fn sauce(ctx: Context<'_>, arg: String) -> Result<()> {
     Ok(())
 }
 
-/// Reverse image search via saucenao
+/// Reverse image search via saucenao by attachment
 #[poise::command(slash_command)]
 pub async fn file(
     ctx: Context<'_>,
@@ -82,6 +82,7 @@ pub async fn file(
     Ok(())
 }
 
+/// Reverse image search via saucenao by url
 #[poise::command(slash_command)]
 pub async fn url(
     ctx: Context<'_>,
