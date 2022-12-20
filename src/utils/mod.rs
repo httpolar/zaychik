@@ -1,3 +1,4 @@
+pub mod paginators;
 pub mod simple_paginator;
 
 use poise::serenity_prelude::{Http, User, UserId};
