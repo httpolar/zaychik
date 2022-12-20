@@ -6,7 +6,7 @@ use figment::{
 };
 
 #[derive(Debug, Deserialize)]
-pub struct ApiKeys { 
+pub struct ApiKeys {
     pub saucenao: String,
 }
 
