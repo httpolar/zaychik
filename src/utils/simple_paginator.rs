@@ -1,7 +1,8 @@
+// This really needs a rewrite
+
 #![allow(unused)]
 use crate::prelude::Context;
 use anyhow::{bail, Result};
-use nanoid::nanoid;
 use poise::futures_util::StreamExt;
 use poise::serenity_prelude::{
     CacheHttp, Http, InteractionResponseType, MessageBuilder, MessageComponentInteraction,
@@ -13,7 +14,6 @@ pub struct SimplePaginator {
     pub pages: Vec<String>,
     timeout: Duration,
     ephemeral: bool,
-    id: String,
 }
 
 impl SimplePaginator {
@@ -69,8 +69,8 @@ impl SimplePaginator {
 
         let current_page = Arc::new(Mutex::<usize>::new(0));
 
-        let previous_id = format!("previous:{}", self.id);
-        let next_id = format!("next:{}", self.id);
+        let previous_id = "previous";
+        let next_id = "next";
 
         let reply_handle = ctx
             .send(|reply| {
@@ -79,8 +79,8 @@ impl SimplePaginator {
 
                 reply.components(|component| {
                     component.create_action_row(|act_row| {
-                        act_row.create_button(|btn| btn.custom_id(&previous_id).label("previous"));
-                        act_row.create_button(|btn| btn.custom_id(&next_id).label("next"))
+                        act_row.create_button(|btn| btn.custom_id(previous_id).label("previous"));
+                        act_row.create_button(|btn| btn.custom_id(next_id).label("next"))
                     })
                 })
             })
@@ -98,7 +98,7 @@ impl SimplePaginator {
             let mut current_page_lock = current_page.lock().await;
 
             // handle previous page
-            if custom_id == previous_id.as_str() {
+            if custom_id == previous_id {
                 match current_page_lock.checked_sub(1) {
                     None => {
                         self.failure(&interaction, ctx.http(), "Already at the first page.")
@@ -118,7 +118,7 @@ impl SimplePaginator {
             };
 
             // handle next page
-            if custom_id == next_id.as_str() {
+            if custom_id == next_id {
                 let new_page_idx = current_page_lock.saturating_add(1);
 
                 match self.pages.get(new_page_idx) {
@@ -184,8 +184,7 @@ impl SimplePaginatorBuilder {
         SimplePaginator {
             pages: self.pages,
             timeout: self.timeout,
-            id: nanoid!(8),
-            ephemeral: self.ephemeral
+            ephemeral: self.ephemeral,
         }
     }
 }
