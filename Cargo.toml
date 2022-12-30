@@ -1,8 +1,6 @@
-cargo-features = ["profile-rustflags"]
-
 [package]
 name = "zaychik"
-version = "0.0.2"
+version = "0.0.18"
 publish = false
 rust-version = "1.68"
 edition = "2021"
