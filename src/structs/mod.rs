@@ -1,2 +1,2 @@
+pub mod entities;
 pub mod saucenao;
-pub mod tables;
