@@ -1,3 +1,4 @@
+#![allow(unused)]
 use std::{sync::Arc, time::Duration};
 
 use anyhow::{Error, Result};

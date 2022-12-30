@@ -1,3 +1,4 @@
+#![allow(unused)]
 use crate::prelude::Context;
 use anyhow::{bail, Result};
 use nanoid::nanoid;
