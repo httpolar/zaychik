@@ -1,3 +1,4 @@
+mod button_roles;
 mod external_apis;
 mod info;
 mod random;
@@ -13,5 +14,6 @@ pub async fn get_commands() -> Vec<poise::Command<crate::Data, anyhow::Error>> {
         self::external_apis::sauce(),
         self::react_roles::reactrole(),
         self::settings::settings(),
+        self::button_roles::buttonrole(),
     ]
 }
