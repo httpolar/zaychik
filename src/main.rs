@@ -3,6 +3,7 @@
 
 mod commands;
 mod config;
+mod database;
 mod prelude;
 mod structs;
 mod utils;
@@ -17,7 +18,7 @@ use utils::database::create_pool;
 pub struct Data {
     keys: ApiKeys,
     reqwest: reqwest::Client,
-    pool: Pool<Postgres>
+    pool: Pool<Postgres>,
 }
 
 async fn event_handler(

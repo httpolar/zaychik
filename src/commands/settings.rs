@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-use crate::{prelude::Context, structs::entities::common::Exists};
+use crate::{prelude::Context, database::entities::common::Exists};
 
 #[poise::command(
     slash_command,
