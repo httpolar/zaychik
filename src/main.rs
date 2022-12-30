@@ -3,6 +3,7 @@
 
 mod commands;
 mod config;
+mod constans;
 mod database;
 mod event_handlers;
 mod prelude;
