@@ -16,13 +16,11 @@ async-trait = "0.1.59"
 rand = "0.8.5"
 serde_json = "1.0.89"
 anyhow = "1.0.66"
-nanoid = "0.4.0"
 regex = "1.7.0"
-
 
 [dependencies.figment]
 version = "0.10"
-features = ["toml", "env"]
+features = ["toml"]
 
 [dependencies.tokio]
 version = "1.23.0"
@@ -31,7 +29,7 @@ features = ["macros", "rt-multi-thread"]
 [dependencies.sqlx]
 version = "0.6"
 default-features = false
-features = ["macros", "postgres", "runtime-tokio-rustls"]
+features = ["macros", "postgres", "runtime-tokio-rustls", "uuid"]
 
 [dependencies.serenity]
 version = "0.11.5"
@@ -59,3 +57,7 @@ features = ["json"]
 [dependencies.serde]
 version = "1.0.152"
 features = ["derive"]
+
+[dependencies.uuid]
+version = "1.2.2"
+features = ["v4"]
