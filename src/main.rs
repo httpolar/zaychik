@@ -7,6 +7,7 @@ mod database;
 mod event_handlers;
 mod prelude;
 mod structs;
+mod tests;
 mod traits;
 mod utils;
 
