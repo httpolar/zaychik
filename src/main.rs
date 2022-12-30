@@ -6,6 +6,7 @@ mod config;
 mod database;
 mod prelude;
 mod structs;
+mod traits;
 mod utils;
 
 use anyhow::{Error, Result};
