@@ -11,10 +11,13 @@ use anyhow::{Error, Result};
 use commands::get_commands;
 use config::{ApiKeys, AppConfig};
 use poise::serenity_prelude as serenity;
+use sqlx::{Pool, Postgres};
+use utils::database::create_pool;
 
 pub struct Data {
     keys: ApiKeys,
     reqwest: reqwest::Client,
+    pool: Pool<Postgres>
 }
 
 async fn event_handler(
@@ -40,8 +43,9 @@ async fn event_handler(
 }
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<()> {
     let config = AppConfig::figment();
+    let pool = create_pool(&config.database.url).await?;
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
@@ -59,9 +63,12 @@ async fn main() {
                 Ok(Data {
                     keys: config.apis,
                     reqwest: reqwest::Client::new(),
+                    pool,
                 })
             })
         });
 
     framework.run().await.unwrap();
+
+    Ok(())
 }
