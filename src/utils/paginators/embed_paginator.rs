@@ -117,6 +117,11 @@ impl EmbedPaginator {
             false => ctx.defer().await?,
         }
 
+        if self.pages.is_empty() {
+            ctx.say(":thinking: Hm, there's nothing here...").await?;
+            return Ok(());
+        }
+
         let current_index = Arc::new(Mutex::<usize>::new(0));
         let first_page = self.format_page(0)?;
 
