@@ -15,3 +15,13 @@ impl UserFromUserId for User {
         http.get_user(id.0).await
     }
 }
+
+#[macro_export]
+macro_rules! message_link {
+    ( $guild:expr, $channel:expr, $message:expr  ) => {
+        format!(
+            "https://discord.com/channels/{}/{}/{}",
+            $guild, $channel, $message
+        )
+    };
+}
