@@ -266,6 +266,11 @@ impl EmbedPaginatorBuilder {
         self
     }
 
+    pub fn pages(mut self, v: Vec<String>) -> Self {
+        self.pages = v;
+        self
+    }
+
     pub fn timeout(mut self, n: Duration) -> Self {
         self.timeout = n;
         self
