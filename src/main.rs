@@ -4,14 +4,16 @@
 mod commands;
 mod config;
 mod database;
+mod event_handlers;
 mod prelude;
 mod structs;
 mod traits;
 mod utils;
 
-use anyhow::{Error, Result};
+use anyhow::Result;
 use commands::get_commands;
 use config::{ApiKeys, AppConfig};
+use event_handlers::main_handler;
 use poise::serenity_prelude as serenity;
 use sqlx::{Pool, Postgres};
 use utils::database::create_pool;
@@ -20,28 +22,6 @@ pub struct Data {
     keys: ApiKeys,
     reqwest: reqwest::Client,
     pool: Pool<Postgres>,
-}
-
-async fn event_handler(
-    _ctx: &serenity::Context,
-    event: &poise::Event<'_>,
-    _framework: poise::FrameworkContext<'_, Data, Error>,
-    _state: &Data,
-) -> Result<()> {
-    match event {
-        poise::Event::Ready { data_about_bot } => {
-            println!("{} is ready!", data_about_bot.user.name)
-        }
-
-        poise::Event::GuildCreate { guild, is_new } => {
-            let special_char = if *is_new { '+' } else { '*' };
-            println!("{special_char} guild {}", guild.name,)
-        }
-
-        _ => (),
-    }
-
-    Ok(())
 }
 
 #[tokio::main]
@@ -53,7 +33,7 @@ async fn main() -> Result<()> {
         .options(poise::FrameworkOptions {
             commands: get_commands().await,
             event_handler: |ctx, event, framework, state| {
-                Box::pin(event_handler(ctx, event, framework, state))
+                Box::pin(main_handler(ctx, event, framework, state))
             },
             ..Default::default()
         })
