@@ -11,9 +11,15 @@ pub struct ApiKeys {
 }
 
 #[derive(Debug, Deserialize)]
+pub struct Database {
+    pub url: String
+}
+
+#[derive(Debug, Deserialize)]
 pub struct AppConfig {
     pub token: String,
     pub apis: ApiKeys,
+    pub database: Database,
 }
 
 impl AppConfig {
