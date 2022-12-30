@@ -63,8 +63,27 @@ create unique index react_roles_logging_guild_id_uindex
     on react_roles_logging (guild_id);
 
 
+-- React roles with buttons
 
+create table button_roles
+(
+    id         uuid default gen_random_uuid() not null,
+    guild_id   bigint                         not null,
+    channel_id bigint                         not null,
+    role_id    bigint                         not null,
+    constraint button_roles_pk
+        primary key (id),
+    constraint button_roles_guilds_guild_id_fk
+        foreign key (guild_id) references guilds
+            on update cascade on delete cascade
+);
 
+create index button_roles_channel_id_index
+    on button_roles (channel_id);
 
+create index button_roles_guild_id_index
+    on button_roles (guild_id);
 
-
+create unique index button_roles_channel_id_role_id_uindex
+    on button_roles (channel_id, role_id);
+    
