@@ -70,6 +70,7 @@ create table button_roles
     id         uuid default gen_random_uuid() not null,
     guild_id   bigint                         not null,
     channel_id bigint                         not null,
+    message_id bigint,
     role_id    bigint                         not null,
     constraint button_roles_pk
         primary key (id),
@@ -86,4 +87,6 @@ create index button_roles_guild_id_index
 
 create unique index button_roles_channel_id_role_id_uindex
     on button_roles (channel_id, role_id);
-    
+
+create unique index button_roles_message_id_uindex
+    on button_roles (message_id);
