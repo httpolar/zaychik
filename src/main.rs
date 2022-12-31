@@ -16,7 +16,7 @@ use anyhow::Result;
 use commands::get_commands;
 use config::{ApiKeys, AppConfig};
 use event_handlers::main_handler;
-use poise::serenity_prelude::{self as serenity, ApplicationId, UserId};
+use poise::serenity_prelude::{self as serenity};
 use sqlx::{Pool, Postgres};
 use utils::database::create_pool;
 
@@ -24,8 +24,6 @@ pub struct Data {
     keys: ApiKeys,
     pool: Pool<Postgres>,
     reqwest: reqwest::Client,
-    bot_id: UserId,
-    app_id: ApplicationId,
 }
 
 #[tokio::main]
@@ -47,16 +45,10 @@ async fn main() -> Result<()> {
             Box::pin(async move {
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
 
-                let user_data = framework.user_data().await;
-                let bot_id = user_data.bot_id;
-                let app_id = user_data.app_id;
-
                 Ok(Data {
                     keys: config.apis,
                     pool,
                     reqwest: reqwest::Client::new(),
-                    bot_id,
-                    app_id,
                 })
             })
         });
