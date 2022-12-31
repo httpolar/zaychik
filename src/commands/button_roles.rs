@@ -1,7 +1,10 @@
+use std::fmt::Display;
 use std::time::Duration;
 
 use anyhow::{bail, Error, Result};
-use poise::serenity_prelude::{ButtonStyle, CacheHttp, Channel, Colour, Message, Role};
+use poise::serenity_prelude::{
+    ButtonStyle, CacheHttp, Channel, Colour, CreateComponents, Message, Role,
+};
 
 use crate::constans::{BUTTON_ROLE_ADD_PREFIX, BUTTON_ROLE_RMV_PREFIX};
 use crate::database::entities::button_roles::ButtonRole;
@@ -10,6 +13,30 @@ use crate::prelude::Context;
 use crate::traits::as_i64::AsInt64;
 use crate::traits::bot_emotes::BotEmotes;
 use crate::utils::paginators::EmbedPaginator;
+
+fn create_button_role_components<D: Display>(
+    uuid: &uuid::Uuid,
+    acquire_label: &D,
+    withdraw_label: &D,
+) -> CreateComponents {
+    let mut components = CreateComponents::default();
+
+    components.create_action_row(|act_row| {
+        act_row
+            .create_button(|btn| {
+                btn.custom_id(format!("{BUTTON_ROLE_ADD_PREFIX}:{uuid}"))
+                    .style(ButtonStyle::Secondary)
+                    .label(acquire_label)
+            })
+            .create_button(|btn| {
+                btn.custom_id(format!("{BUTTON_ROLE_RMV_PREFIX}:{uuid}"))
+                    .style(ButtonStyle::Secondary)
+                    .label(withdraw_label)
+            })
+    });
+
+    components
+}
 
 #[poise::command(
     slash_command,
@@ -53,8 +80,8 @@ pub async fn new(
 
     let button_role = sqlx::query_as::<_, ButtonRole>(
         r#"INSERT INTO "public"."button_roles" ("guild_id", "channel_id", "role_id")
-    VALUES ($1, $2, $3)
-    RETURNING *;"#,
+        VALUES ($1, $2, $3)
+        RETURNING *;"#,
     )
     .bind(guild.id.as_i64()?)
     .bind(channel_id.as_i64()?)
@@ -62,25 +89,14 @@ pub async fn new(
     .fetch_one(&mut tx)
     .await?;
 
+    let components =
+        create_button_role_components(&button_role.id, &acquire_btn_label, &withdraw_btn_label);
+
     let reply = channel_id
         .send_message(ctx.http(), |r| {
-            r.components(|c| {
-                c.create_action_row(|act_row| {
-                    act_row
-                        .create_button(|btn| {
-                            btn.custom_id(format!("{BUTTON_ROLE_ADD_PREFIX}:{}", button_role.id))
-                                .style(ButtonStyle::Primary)
-                                .label(&acquire_btn_label)
-                        })
-                        .create_button(|btn| {
-                            btn.custom_id(format!("{BUTTON_ROLE_RMV_PREFIX}:{}", button_role.id))
-                                .style(ButtonStyle::Secondary)
-                                .label(&withdraw_btn_label)
-                        })
-                })
-            })
-            .content(message)
-            .allowed_mentions(|am| am.empty_roles().empty_users())
+            r.set_components(components)
+                .content(message)
+                .allowed_mentions(|am| am.empty_roles().empty_users())
         })
         .await;
 
