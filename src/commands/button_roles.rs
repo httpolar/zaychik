@@ -49,6 +49,7 @@ pub async fn buttonrole(_ctx: Context<'_>, _arg: String) -> Result<()> {
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 #[poise::command(
     slash_command,
     guild_only = true,
@@ -61,6 +62,8 @@ pub async fn new(
     #[description = "Contents of the message that will be sent"] message: Option<String>,
     #[description = "Text of the button that gives the role"] acquire_btn_label: Option<String>,
     #[description = "Text of the button that removes the role"] withdraw_btn_label: Option<String>,
+    #[description = "If you want to send the buttons message as embed"] as_embed: Option<bool>,
+    #[description = "You can set title of the embed"] embed_title: Option<String>,
 ) -> Result<()> {
     let guild = ctx
         .guild()
@@ -94,8 +97,19 @@ pub async fn new(
 
     let reply = channel_id
         .send_message(ctx.http(), |r| {
+            if let Some(true) = as_embed {
+                r.embed(|e| {
+                    if let Some(title) = embed_title {
+                        e.title(title);
+                    }
+
+                    e.description(message).colour(Colour(0x4F545C))
+                });
+            } else {
+                r.content(message);
+            };
+
             r.set_components(components)
-                .content(message)
                 .allowed_mentions(|am| am.empty_roles().empty_users())
         })
         .await;
