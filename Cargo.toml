@@ -17,6 +17,7 @@ rand = "0.8.5"
 serde_json = "1.0.89"
 anyhow = "1.0.66"
 regex = "1.7.0"
+eyre = "0.6.8"
 
 [dependencies.figment]
 version = "0.10"
