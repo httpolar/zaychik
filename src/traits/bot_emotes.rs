@@ -1,11 +1,16 @@
-use crate::{config::Emotes, prelude::Context};
+use crate::{prelude::Context};
 
 pub trait BotEmotes {
-    fn bot_emotes(&self) -> &Emotes;
+    fn emote_success(&self) -> &str;
+    fn emote_failure(&self) -> &str;
 }
 
 impl<'a> BotEmotes for Context<'a> {
-    fn bot_emotes(&self) -> &Emotes {
-        &self.data().bot_emotes
+    fn emote_success(&self) -> &str {
+        &self.data().bot_emotes.success
+    }
+
+    fn emote_failure(&self) -> &str {
+        &self.data().bot_emotes.failure
     }
 }
