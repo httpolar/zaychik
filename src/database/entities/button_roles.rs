@@ -1,5 +1,5 @@
-use anyhow::Result;
-use poise::serenity_prelude::{ChannelId, GuildId, RoleId};
+use anyhow::{Error, Result};
+use poise::serenity_prelude::{ChannelId, GuildId, MessageId, RoleId};
 use sqlx::FromRow;
 
 #[derive(Debug, FromRow)]
@@ -24,6 +24,15 @@ impl ButtonRole {
         let as_u64: u64 = self.channel_id.try_into()?;
 
         Ok(ChannelId(as_u64))
+    }
+
+    pub fn message_id(&self) -> Result<MessageId> {
+        let as_u64: u64 = self
+            .message_id
+            .ok_or_else(|| Error::msg("Message ID is None"))?
+            .try_into()?;
+
+        Ok(MessageId(as_u64))
     }
 
     pub fn role_id(&self) -> Result<RoleId> {
