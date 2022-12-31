@@ -16,8 +16,15 @@ pub struct Database {
 }
 
 #[derive(Debug, Deserialize)]
+pub struct Emotes {
+    pub success: String,
+    pub failure: String,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct AppConfig {
     pub token: String,
+    pub emotes: Emotes,
     pub apis: ApiKeys,
     pub database: Database,
 }

@@ -14,16 +14,17 @@ mod utils;
 
 use anyhow::Result;
 use commands::get_commands;
-use config::{ApiKeys, AppConfig};
+use config::{ApiKeys, AppConfig, Emotes};
 use event_handlers::main_handler;
 use poise::serenity_prelude::{self as serenity};
 use sqlx::{Pool, Postgres};
 use utils::database::create_pool;
 
 pub struct Data {
-    keys: ApiKeys,
     pool: Pool<Postgres>,
     reqwest: reqwest::Client,
+    keys: ApiKeys,
+    bot_emotes: Emotes,    
 }
 
 #[tokio::main]
@@ -46,9 +47,10 @@ async fn main() -> Result<()> {
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
 
                 Ok(Data {
-                    keys: config.apis,
                     pool,
                     reqwest: reqwest::Client::new(),
+                    keys: config.apis,
+                    bot_emotes: config.emotes,
                 })
             })
         });
