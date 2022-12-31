@@ -162,11 +162,13 @@ pub async fn remove(ctx: Context<'_>, message: Message) -> Result<()> {
     let guild_id = ctx.guild_id().unwrap().as_i64()?;
     let message_id = message.id.as_i64()?;
 
-    let deleted: Option<ReactRole> = sqlx::query_as(r#"DELETE
+    let deleted: Option<ReactRole> = sqlx::query_as(
+        r#"DELETE
     FROM "public"."react_roles" AS "t"
     WHERE "t"."guild_id" = $1
       AND "t"."message_id" = $2
-    RETURNING *;"#)
+    RETURNING *;"#,
+    )
     .bind(guild_id)
     .bind(message_id)
     .fetch_optional(pool)
