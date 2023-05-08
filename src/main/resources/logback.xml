@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+    <logger name="ru.ztrap.bot.woobzor.discord" level="DEBUG"/>
+    <logger name="dev.kord.core" level="DEBUG"/>
+    <logger name="io.ktor.client.HttpClient" level="DEBUG"/>
+    <logger name="com.rabbitmq.client" level="DEBUG"/>
+
+    <!-- Appender Configuration [Console] -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%cyan(%date{HH:mm:ss.SSS} %-18([%thread])) %highlight(%8([%level])) %boldGreen(%logger{0}): %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender Output Configuration -->
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
