@@ -4,7 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="53f09340-a12a-4bfe-8a47-01be5c03c663" name="Changes" comment="" />
+    <list default="true" id="53f09340-a12a-4bfe-8a47-01be5c03c663" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/ktor.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/zaychik/Config.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/zaychik/Main.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/zaychik/commands/ReactRole.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/zaychik/commands/contextual/ReactRole.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/zaychik/db/ZaychikDatabase.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/zaychik/db/entities/ReactRole.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/zaychik/db/tables/ReactRolesTable.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/zaychik/extensions/exposed.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/logback.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -79,6 +105,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/dev.kord/kord-common-jvm/0.9.0/7092641965a58583bb9ea38aedb04c29ce905676/kord-common-jvm-0.9.0-sources.jar!/commonMain/entity/Interactions.kt" root0="SKIP_INSPECTION" />
     <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/dev.kord/kord-core-jvm/0.9.0/595b895f80bc840bec9e3ff9f95b1eea88af2f7d/kord-core-jvm-0.9.0-sources.jar!/commonMain/behavior/interaction/ModalParentInteractionBehavior.kt" root0="SKIP_INSPECTION" />
@@ -99,6 +128,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "kotlin-rewrite",
     "ktor.last.update.timestamp": "1683552672298",
     "last.edited.regexp": "",
     "last_opened_file_path": "/home/miko/IdeaProjects/zaychik",
@@ -180,7 +210,7 @@
       <workItem from="1683471835893" duration="6570000" />
       <workItem from="1683542608814" duration="11501000" />
       <workItem from="1683554153513" duration="67000" />
-      <workItem from="1683554227241" duration="9010000" />
+      <workItem from="1683554227241" duration="9374000" />
     </task>
     <servers />
   </component>
