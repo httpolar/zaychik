@@ -2,6 +2,7 @@ package zaychik
 
 import dev.kord.core.Kord
 import dev.kord.core.event.interaction.*
+import dev.kord.core.event.message.MessageDeleteEvent
 import dev.kord.core.on
 import dev.kord.gateway.Intents
 import dev.kord.rest.builder.interaction.role
@@ -17,6 +18,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import zaychik.commands.contextual.ReactRoleContextCommand
 import zaychik.db.ZaychikDatabase
+import zaychik.db.entities.ReactRole
 import zaychik.db.tables.ReactRolesTable
 
 private val logger = KotlinLogging.logger {}
@@ -36,6 +38,24 @@ class Zaychik(private val kord: Kord) {
         ReactRoleContextCommand.name to ReactRoleContextCommand(),
     )
 
+    private suspend fun createContextualCommands() {
+        kord.createGlobalApplicationCommands {
+            contextualCommands.keys.forEach {
+                message(name = it)
+            }
+        }
+    }
+
+    private suspend fun createSlashCommands() {
+        kord.createGlobalChatInputCommand(name = "react-role", description = "Reaction roles") {
+            subCommand(name = "create", description = "Creates a reaction role") {
+                role(name = "role", description = "Role that will be given to the user who clicks the reaction")
+            }
+            subCommand(name = "delete", description = "Deletes a reaction role")
+            subCommand(name = "find", description = "Searches for a reaction role or a message with it")
+        }
+    }
+
     suspend fun start() {
         logger.info("Zaychik is starting!")
 
@@ -45,19 +65,8 @@ class Zaychik(private val kord: Kord) {
                 SchemaUtils.createMissingTablesAndColumns(ReactRolesTable)
             }
         }
-        kord.createGlobalChatInputCommand(name = "react-role", description = "Reaction roles") {
-            subCommand(name = "create", description = "Creates a reaction role") {
-                role(name = "role", description = "Role that will be given to the user who clicks the reaction")
-            }
-            subCommand(name = "delete", description = "Deletes a reaction role")
-            subCommand(name = "find", description = "Searches for a reaction role or a message with it")
-        }
 
-        kord.createGlobalApplicationCommands {
-            contextualCommands.keys.forEach {
-                message(name = it)
-            }
-        }
+        createContextualCommands()
 
         kord.on<GuildMessageCommandInteractionCreateEvent> {
             val cmd = contextualCommands.getOrDefault(this.interaction.invokedCommandName, null)
@@ -69,6 +78,14 @@ class Zaychik(private val kord: Kord) {
             }
         }
 
+        kord.on<MessageDeleteEvent>  {
+            newSuspendedTransaction(Dispatchers.IO) {
+                ReactRole.find { ReactRolesTable.messageId eq messageId.value.toLong() }
+                    .firstOrNull()
+                    ?.delete()
+            }
+        }
+
         kord.login {
             intents = Intents.nonPrivileged
         }
@@ -77,6 +94,7 @@ class Zaychik(private val kord: Kord) {
 
 suspend fun main() {
     Config.load("config.properties")  // This will use config.properties of the working directory
+
     val koin = startKoin {
         modules(zaychikModule())
     }.koin
