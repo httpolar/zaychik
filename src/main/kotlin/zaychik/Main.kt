@@ -1,6 +1,7 @@
 package zaychik
 
 import dev.kord.core.Kord
+import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.event.interaction.*
 import dev.kord.core.event.message.MessageDeleteEvent
 import dev.kord.core.on
@@ -69,13 +70,17 @@ class Zaychik(private val kord: Kord) {
         createContextualCommands()
 
         kord.on<GuildMessageCommandInteractionCreateEvent> {
-            val cmd = contextualCommands.getOrDefault(this.interaction.invokedCommandName, null)
+            val cmd = contextualCommands.getOrDefault(interaction.invokedCommandName, null)
                 ?: return@on
 
             val canRun = cmd.check(this)
-            if (canRun) {
-                cmd.action(this)
+            if (!canRun) {
+                interaction.respondEphemeral {
+                    content = ":x: Missing permissions! You are not allowed to run this command."
+                }
+                return@on
             }
+            cmd.action(this)
         }
 
         kord.on<MessageDeleteEvent>  {
