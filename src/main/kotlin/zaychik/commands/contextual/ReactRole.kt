@@ -134,7 +134,6 @@ suspend fun handleReactRoleCreateFromRightClick(event: GuildMessageCommandIntera
             this.roleId = role.id.value.toLong()
             this.emojiId = emoji.id.value.toLong()
             this.enabled = true
-
         }
     }
 
