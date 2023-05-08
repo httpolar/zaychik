@@ -25,9 +25,9 @@ kotlin {
     jvmToolchain(19)
 }
 
-//tasks.shadowJar {
-//    minimize()
-//}
+tasks.shadowJar {
+    minimize()
+}
 
 dependencies {
     implementation("io.github.oshai:kotlin-logging-jvm:4.0.0-beta-22")
