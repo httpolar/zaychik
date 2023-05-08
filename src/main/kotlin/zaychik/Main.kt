@@ -15,7 +15,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import zaychik.commands.contextual.handleReactRoleCreateFromRightClick
+import zaychik.commands.contextual.ReactRoleContextCommand
 import zaychik.db.ZaychikDatabase
 import zaychik.db.tables.ReactRolesTable
 
@@ -32,6 +32,10 @@ fun kordFactory() = runBlocking {
 }
 
 class Zaychik(private val kord: Kord) {
+    private val contextualCommands = mapOf(
+        ReactRoleContextCommand.name to ReactRoleContextCommand(),
+    )
+
     suspend fun start() {
         logger.info("Zaychik is starting!")
 
@@ -50,13 +54,19 @@ class Zaychik(private val kord: Kord) {
         }
 
         kord.createGlobalApplicationCommands {
-            message(name = "New Reaction Role")
-            message(name = "Remove Reaction Role")
+            contextualCommands.keys.forEach {
+                message(name = it)
+            }
         }
 
         kord.on<GuildMessageCommandInteractionCreateEvent> {
-            println(this)
-            handleReactRoleCreateFromRightClick(this)
+            val cmd = contextualCommands.getOrDefault(this.interaction.invokedCommandName, null)
+                ?: return@on
+
+            val canRun = cmd.check(this)
+            if (canRun) {
+                cmd.action(this)
+            }
         }
 
         kord.login {
