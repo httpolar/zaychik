@@ -9,10 +9,10 @@ import java.util.UUID
 class ReactRole(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<ReactRole>(ReactRolesTable)
 
-    val guildId by ReactRolesTable.guildId
-    val channelId by ReactRolesTable.channelId
-    val messageId by ReactRolesTable.messageId
-    val roleId by ReactRolesTable.roleId
-    val emojiId by ReactRolesTable.emojiId
-    val enabled by ReactRolesTable.enabled
+    var guildId by ReactRolesTable.guildId
+    var channelId by ReactRolesTable.channelId
+    var messageId by ReactRolesTable.messageId
+    var roleId by ReactRolesTable.roleId
+    var emojiId by ReactRolesTable.emojiId
+    var enabled by ReactRolesTable.enabled
 }
