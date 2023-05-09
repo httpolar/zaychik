@@ -32,10 +32,7 @@ class CreateReactRoleContextCommand : ApplicationCommand<GuildMessageCommandInte
         val kord = event.kord
         val actor = event.interaction.user
         val guild = event.interaction.guild
-
-        val originalMessage = event.interaction.messages.values.firstOrNull() ?:
-        // tell user things may fuck up sometimes
-        return
+        val originalMessage = event.interaction.target
 
         val botsHighestRole = event.interaction.guild
             .getMember(event.kord.selfId)
@@ -136,7 +133,7 @@ class CreateReactRoleContextCommand : ApplicationCommand<GuildMessageCommandInte
 
         if (emoji == null) {
             submission.interaction.respondEphemeral {
-                content = ":x: You have provided a non-existent emoji!"
+                content = ":x: You have provided a non-existent emoji or it doesn't belong to this server!"
             }
             return
         }
