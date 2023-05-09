@@ -83,11 +83,17 @@ class Zaychik(private val kord: Kord) {
             cmd.action(this)
         }
 
-        kord.on<MessageDeleteEvent>  {
+        kord.on<MessageDeleteEvent> {
+            val eventMessageId = messageId.value.toLong()
             newSuspendedTransaction(Dispatchers.IO) {
-                ReactRole.find { ReactRolesTable.messageId eq messageId.value.toLong() }
-                    .firstOrNull()
-                    ?.delete()
+                ReactRolesTable.deleteWhere { messageId eq eventMessageId }
+            }
+        }
+
+        kord.on<ChannelDeleteEvent> {
+            val eventChannelId = channel.id.value.toLong()
+            newSuspendedTransaction(Dispatchers.IO) {
+                ReactRolesTable.deleteWhere { channelId eq eventChannelId }
             }
         }
 
