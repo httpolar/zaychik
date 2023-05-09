@@ -18,9 +18,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.time.Duration.Companion.seconds
 
-class CreateReactRoleContextCommand : ContextualCommand<GuildMessageCommandInteractionCreateEvent> {
+class CreateReactRoleContextCommand : ApplicationCommand<GuildMessageCommandInteractionCreateEvent>() {
     companion object {
-        const val name = "New React Role"
+        const val name = "Create React Role"
     }
 
     override suspend fun check(event: GuildMessageCommandInteractionCreateEvent): Boolean {
