@@ -9,6 +9,10 @@ object ReactRolesTable : UUIDTable() {
     val channelId = long("channel_id")
     val messageId = long("message_id").index()
     val roleId = long("role_id").nullable().index()
-    val emojiId = long("emoji_id").uniqueIndex()
+    val emojiId = long("emoji_id")
     val enabled = bool("enabled").default(true)
+
+    init {
+        uniqueIndex(messageId, emojiId)
+    }
 }
