@@ -17,7 +17,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import zaychik.commands.contextual.ReactRoleContextCommand
+import zaychik.commands.contextual.CreateReactRoleContextCommand
 import zaychik.db.ZaychikDatabase
 import zaychik.db.entities.ReactRole
 import zaychik.db.tables.ReactRolesTable
@@ -36,7 +36,7 @@ fun kordFactory() = runBlocking {
 
 class Zaychik(private val kord: Kord) {
     private val contextualCommands = mapOf(
-        ReactRoleContextCommand.name to ReactRoleContextCommand(),
+        CreateReactRoleContextCommand.name to CreateReactRoleContextCommand(),
     )
 
     private suspend fun createContextualCommands() {

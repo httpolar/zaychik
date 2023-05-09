@@ -18,7 +18,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.time.Duration.Companion.seconds
 
-class ReactRoleContextCommand : ContextualCommand<GuildMessageCommandInteractionCreateEvent> {
+class CreateReactRoleContextCommand : ContextualCommand<GuildMessageCommandInteractionCreateEvent> {
     companion object {
         const val name = "New React Role"
     }
