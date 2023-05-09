@@ -2,6 +2,7 @@ package zaychik
 
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.respondEphemeral
+import dev.kord.core.event.channel.ChannelDeleteEvent
 import dev.kord.core.event.interaction.*
 import dev.kord.core.event.message.MessageDeleteEvent
 import dev.kord.core.on
@@ -12,14 +13,16 @@ import io.github.oshai.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import zaychik.commands.contextual.CreateReactRoleContextCommand
+import zaychik.commands.contextual.ViewReactRolesAppCommand
 import zaychik.db.ZaychikDatabase
-import zaychik.db.entities.ReactRole
 import zaychik.db.tables.ReactRolesTable
 
 private val logger = KotlinLogging.logger {}
@@ -37,6 +40,7 @@ fun kordFactory() = runBlocking {
 class Zaychik(private val kord: Kord) {
     private val contextualCommands = mapOf(
         CreateReactRoleContextCommand.name to CreateReactRoleContextCommand(),
+        ViewReactRolesAppCommand.name to ViewReactRolesAppCommand(),
     )
 
     private suspend fun createContextualCommands() {
