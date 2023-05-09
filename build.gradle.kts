@@ -4,8 +4,8 @@ val koinVersion = "3.4.0"
 val exposedVersion = "0.40.1"
 
 plugins {
-    kotlin("jvm") version "1.8.20"
-    kotlin("plugin.serialization") version "1.8.20"
+    kotlin("jvm") version "1.8.21"
+    kotlin("plugin.serialization") version "1.8.21"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     application
 }
