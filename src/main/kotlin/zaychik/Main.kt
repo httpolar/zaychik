@@ -20,8 +20,8 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import zaychik.commands.contextual.CreateReactRoleAppCommand
-import zaychik.commands.contextual.ViewReactRolesAppCommand
+import zaychik.commands.app.CreateReactRoleAppCommand
+import zaychik.commands.app.ViewReactRolesAppCommand
 import zaychik.db.ZaychikDatabase
 import zaychik.db.tables.ReactRolesTable
 

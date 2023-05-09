@@ -1,4 +1,4 @@
-package zaychik.commands.contextual
+package zaychik.commands.app
 
 import dev.kord.core.event.Event
 
