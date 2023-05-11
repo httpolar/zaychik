@@ -54,7 +54,7 @@ class Zaychik(private val kord: Kord) {
         ViewReactRolesAppCommand.name to ViewReactRolesAppCommand(),
     )
 
-    private suspend fun createContextualCommands() {
+    private suspend fun createAppCommands() {
         kord.createGlobalApplicationCommands {
             appCommands.keys.forEach {
                 message(name = it)
@@ -102,58 +102,29 @@ class Zaychik(private val kord: Kord) {
             }
         }
 
-        createContextualCommands()
-
-        // TODO: Handle unknown roles (users might delete a role but keep react role)
-        kord.on<ReactionAddEvent> {
-            val guild = guild ?: return@on
-            val messageId = message.id.value.toLong()
-
-            val reactRoleId = ReactRole
-                .fromReactionEmoji(emoji, messageId)
-                ?.roleId
-                ?.let(::Snowflake)
-                ?: return@on
-
-            kord.rest.guild.addRoleToGuildMember(
-                guildId = guild.id,
-                userId = user.id,
-                roleId = reactRoleId,
-                reason = "+Reaction role"
-            )
-        }
-
-        // TODO: Handle unknown roles (users might delete a role but keep react role)
-        kord.on<ReactionRemoveEvent> {
-            val guild = guild ?: return@on
-            val messageId = message.id.value.toLong()
-
-            val reactRoleId = ReactRole
-                .fromReactionEmoji(emoji, messageId)
-                ?.roleId
-                ?.let(::Snowflake)
-                ?: return@on
-
-            kord.rest.guild.deleteRoleFromGuildMember(
-                guildId = guild.id,
-                userId = user.id,
-                roleId = reactRoleId,
-                reason = "-Reaction role"
-            )
-        }
+        createAppCommands()
 
         kord.on<GuildMessageCommandInteractionCreateEvent> {
             val cmd = appCommands.getOrDefault(interaction.invokedCommandName, null)
                 ?: return@on
 
-            val canRun = cmd.check(this)
-            if (!canRun) {
+            cmd.checkAndRun(this) {
                 interaction.respondEphemeral {
                     content = ":x: Missing permissions! You are not allowed to run this command."
                 }
-                return@on
             }
-            cmd.action(this)
+        }
+
+        kord.on<ReactionAddEvent> {
+            extractRoleFromReaction(guild, message, emoji) {
+                userAsMember?.addRole(it.id, "(+) Reaction Role Added")
+            }
+        }
+
+        kord.on<ReactionRemoveEvent> {
+            extractRoleFromReaction(guild, message, emoji) {
+                userAsMember?.removeRole(it.id, "(-) Reaction Role Removed")
+            }
         }
 
         kord.on<MessageDeleteEvent> {
