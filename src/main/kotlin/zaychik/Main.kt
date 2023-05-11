@@ -32,7 +32,6 @@ import zaychik.commands.app.CreateReactRoleAppCommand
 import zaychik.commands.app.ViewReactRolesAppCommand
 import zaychik.db.ZaychikDatabase
 import zaychik.db.entities.ReactRole
-import zaychik.db.entities.fromReactionEmoji
 import zaychik.db.tables.ReactRolesTable
 
 private val logger = KotlinLogging.logger {}

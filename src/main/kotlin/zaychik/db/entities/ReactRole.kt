@@ -11,7 +11,21 @@ import zaychik.db.tables.ReactRolesTable
 import java.util.UUID
 
 class ReactRole(id: EntityID<UUID>) : UUIDEntity(id) {
-    companion object : UUIDEntityClass<ReactRole>(ReactRolesTable)
+    companion object : UUIDEntityClass<ReactRole>(ReactRolesTable) {
+        @JvmStatic
+        suspend fun fromReactionEmoji(reaction: ReactionEmoji?, messageId: ULong): ReactRole? {
+            val emoji = (reaction as? ReactionEmoji.Custom) ?: return null
+            val emojiId = emoji.id.value
+
+            val reactRole = newSuspendedTransaction(Dispatchers.IO) {
+                ReactRole.find { (ReactRolesTable.messageId eq messageId) and (ReactRolesTable.emojiId eq emojiId) }
+                    .limit(1)
+                    .firstOrNull()
+            } ?: return null
+
+            return reactRole
+        }
+    }
 
     var guildId by ReactRolesTable.guildId
     var channelId by ReactRolesTable.channelId
@@ -21,15 +35,3 @@ class ReactRole(id: EntityID<UUID>) : UUIDEntity(id) {
     var enabled by ReactRolesTable.enabled
 }
 
-suspend fun ReactRole.Companion.fromReactionEmoji(reaction: ReactionEmoji?, messageId: ULong): ReactRole? {
-    val emoji = (reaction as? ReactionEmoji.Custom) ?: return null
-    val emojiId = emoji.id.value
-
-    val reactRole = newSuspendedTransaction(Dispatchers.IO) {
-        ReactRole.find { (ReactRolesTable.messageId eq messageId) and (ReactRolesTable.emojiId eq emojiId) }
-            .limit(1)
-            .firstOrNull()
-    } ?: return null
-
-    return reactRole
-}
