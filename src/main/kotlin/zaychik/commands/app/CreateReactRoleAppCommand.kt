@@ -15,12 +15,13 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import zaychik.commands.Command
 import zaychik.db.entities.ReactRole
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.time.Duration.Companion.seconds
 
-class CreateReactRoleAppCommand : ApplicationCommand<GuildMessageCommandInteractionCreateEvent>() {
+class CreateReactRoleAppCommand : Command<GuildMessageCommandInteractionCreateEvent>() {
     companion object {
         const val name = "Create React Role"
     }
