@@ -24,7 +24,7 @@ class ViewReactRolesAppCommand : Command<GuildMessageCommandInteractionCreateEve
         val message = event.interaction.target
 
         val reactRoles = newSuspendedTransaction(Dispatchers.IO) {
-            ReactRole.find { ReactRolesTable.messageId eq message.id.value.toLong() }.toList()
+            ReactRole.find { ReactRolesTable.messageId eq message.id.value }.toList()
         }
 
         if (reactRoles.isEmpty()) {
@@ -41,7 +41,7 @@ class ViewReactRolesAppCommand : Command<GuildMessageCommandInteractionCreateEve
             val role = "<@&${it.roleId}>"
 
             val emoji = emojis
-                .firstOrNull { r -> r.id?.value?.toLong() == it.emojiId }
+                .firstOrNull { r -> r.id?.value == it.emojiId }
                 ?.emoji
                 ?.mention
 

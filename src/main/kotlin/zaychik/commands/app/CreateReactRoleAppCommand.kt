@@ -45,8 +45,9 @@ class CreateReactRoleAppCommand : Command<GuildMessageCommandInteractionCreateEv
 
         if (botsHighestRole == null) {
             event.interaction.respondEphemeral {
-                content =
-                    "I do not have enough permissions to perform this action! Please, give me a higher role on your server, so I could give roles to people. pls."
+                content = "I do not have enough permissions to perform this action! " +
+                        "Please, give me a higher role on your server, so I could give roles to people. " +
+                        "pls."
             }
             return
         }
@@ -123,11 +124,11 @@ class CreateReactRoleAppCommand : Command<GuildMessageCommandInteractionCreateEv
 
         newSuspendedTransaction(Dispatchers.IO) {
             ReactRole.new {
-                this.guildId = guild.id.value.toLong()
-                this.channelId = srcMessage.channelId.value.toLong()
-                this.messageId = srcMessage.id.value.toLong()
-                this.roleId = role.id.value.toLong()
-                this.emojiId = reactionEmoji.id.value.toLong()
+                this.guildId = guild.id.value
+                this.channelId = srcMessage.channelId.value
+                this.messageId = srcMessage.id.value
+                this.roleId = role.id.value
+                this.emojiId = reactionEmoji.id.value
                 this.enabled = true
             }
         }

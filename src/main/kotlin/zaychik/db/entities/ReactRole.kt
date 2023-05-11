@@ -21,9 +21,9 @@ class ReactRole(id: EntityID<UUID>) : UUIDEntity(id) {
     var enabled by ReactRolesTable.enabled
 }
 
-suspend fun ReactRole.Companion.fromReactionEmoji(reaction: ReactionEmoji?, messageId: Long): ReactRole? {
-    val emoji = if (reaction is ReactionEmoji.Custom) reaction else null ?: return null
-    val emojiId = emoji.id.value.toLong()
+suspend fun ReactRole.Companion.fromReactionEmoji(reaction: ReactionEmoji?, messageId: ULong): ReactRole? {
+    val emoji = (reaction as? ReactionEmoji.Custom) ?: return null
+    val emojiId = emoji.id.value
 
     val reactRole = newSuspendedTransaction(Dispatchers.IO) {
         ReactRole.find { (ReactRolesTable.messageId eq messageId) and (ReactRolesTable.emojiId eq emojiId) }

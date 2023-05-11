@@ -2,7 +2,11 @@ package zaychik
 
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
+import dev.kord.core.behavior.GuildBehavior
+import dev.kord.core.behavior.MessageBehavior
+import dev.kord.core.behavior.RoleBehavior
 import dev.kord.core.behavior.interaction.respondEphemeral
+import dev.kord.core.entity.ReactionEmoji
 import dev.kord.core.event.channel.ChannelDeleteEvent
 import dev.kord.core.event.interaction.*
 import dev.kord.core.event.message.MessageDeleteEvent
@@ -14,6 +18,7 @@ import dev.kord.rest.builder.interaction.role
 import dev.kord.rest.builder.interaction.subCommand
 import io.github.oshai.KotlinLogging
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -74,7 +79,7 @@ class Zaychik(private val kord: Kord) {
         block: suspend (RoleBehavior) -> Unit
     ) {
         if (guild == null) return
-        val messageId = message.id.value.toLong()
+        val messageId = message.id.value
 
         val reactRoleId = ReactRole
             .fromReactionEmoji(emoji, messageId)
@@ -152,14 +157,14 @@ class Zaychik(private val kord: Kord) {
         }
 
         kord.on<MessageDeleteEvent> {
-            val eventMessageId = messageId.value.toLong()
+            val eventMessageId = messageId.value
             newSuspendedTransaction(Dispatchers.IO) {
                 ReactRolesTable.deleteWhere { messageId eq eventMessageId }
             }
         }
 
         kord.on<ChannelDeleteEvent> {
-            val eventChannelId = channel.id.value.toLong()
+            val eventChannelId = channel.id.value
             newSuspendedTransaction(Dispatchers.IO) {
                 ReactRolesTable.deleteWhere { channelId eq eventChannelId }
             }
