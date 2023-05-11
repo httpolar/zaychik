@@ -10,8 +10,6 @@ plugins {
     application
 }
 
-version = "1.0-SNAPSHOT"
-
 application {
     mainClass.set(mainPath)
     applicationDefaultJvmArgs = listOf("-Dfile.encoding=UTF-8")
