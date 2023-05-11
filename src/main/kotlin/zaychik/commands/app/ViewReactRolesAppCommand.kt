@@ -20,7 +20,6 @@ class ViewReactRolesAppCommand : Command<GuildMessageCommandInteractionCreateEve
     }
 
     override suspend fun action(event: GuildMessageCommandInteractionCreateEvent) {
-        val guild = event.interaction.guild
         val message = event.interaction.target
 
         val reactRoles = newSuspendedTransaction(Dispatchers.IO) {
