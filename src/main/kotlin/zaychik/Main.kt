@@ -67,6 +67,26 @@ class Zaychik(private val kord: Kord) {
         }
     }
 
+    private suspend fun extractRoleFromReaction(
+        guild: GuildBehavior?,
+        message: MessageBehavior,
+        emoji: ReactionEmoji,
+        block: suspend (RoleBehavior) -> Unit
+    ) {
+        if (guild == null) return
+        val messageId = message.id.value.toLong()
+
+        val reactRoleId = ReactRole
+            .fromReactionEmoji(emoji, messageId)
+            ?.roleId
+            ?.let(::Snowflake)
+            ?: return
+
+        val role = guild.roles.firstOrNull { r -> r.id == reactRoleId } ?: return
+
+        block(role)
+    }
+
     suspend fun start() {
         logger.info("Zaychik is starting!")
 
