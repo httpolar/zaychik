@@ -44,14 +44,14 @@ fun kordFactory() = runBlocking {
 }
 
 class Zaychik(private val kord: Kord) {
-    private val contextualCommands = mapOf(
+    private val appCommands = mapOf(
         CreateReactRoleAppCommand.name to CreateReactRoleAppCommand(),
         ViewReactRolesAppCommand.name to ViewReactRolesAppCommand(),
     )
 
     private suspend fun createContextualCommands() {
         kord.createGlobalApplicationCommands {
-            contextualCommands.keys.forEach {
+            appCommands.keys.forEach {
                 message(name = it)
             }
         }
@@ -118,7 +118,7 @@ class Zaychik(private val kord: Kord) {
         }
 
         kord.on<GuildMessageCommandInteractionCreateEvent> {
-            val cmd = contextualCommands.getOrDefault(interaction.invokedCommandName, null)
+            val cmd = appCommands.getOrDefault(interaction.invokedCommandName, null)
                 ?: return@on
 
             val canRun = cmd.check(this)
