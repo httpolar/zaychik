@@ -1,10 +1,13 @@
 package zaychik
 
+import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.event.channel.ChannelDeleteEvent
 import dev.kord.core.event.interaction.*
 import dev.kord.core.event.message.MessageDeleteEvent
+import dev.kord.core.event.message.ReactionAddEvent
+import dev.kord.core.event.message.ReactionRemoveEvent
 import dev.kord.core.on
 import dev.kord.gateway.Intents
 import dev.kord.rest.builder.interaction.role
@@ -23,9 +26,12 @@ import org.koin.dsl.module
 import zaychik.commands.app.CreateReactRoleAppCommand
 import zaychik.commands.app.ViewReactRolesAppCommand
 import zaychik.db.ZaychikDatabase
+import zaychik.db.entities.ReactRole
+import zaychik.db.entities.fromReactionEmoji
 import zaychik.db.tables.ReactRolesTable
 
 private val logger = KotlinLogging.logger {}
+
 
 fun zaychikModule() = module {
     singleOf(::kordFactory)
@@ -72,6 +78,44 @@ class Zaychik(private val kord: Kord) {
         }
 
         createContextualCommands()
+
+        // TODO: Handle unknown roles (users might delete a role but keep react role)
+        kord.on<ReactionAddEvent> {
+            val guild = guild ?: return@on
+            val messageId = message.id.value.toLong()
+
+            val reactRoleId = ReactRole
+                .fromReactionEmoji(emoji, messageId)
+                ?.roleId
+                ?.let(::Snowflake)
+                ?: return@on
+
+            kord.rest.guild.addRoleToGuildMember(
+                guildId = guild.id,
+                userId = user.id,
+                roleId = reactRoleId,
+                reason = "+Reaction role"
+            )
+        }
+
+        // TODO: Handle unknown roles (users might delete a role but keep react role)
+        kord.on<ReactionRemoveEvent> {
+            val guild = guild ?: return@on
+            val messageId = message.id.value.toLong()
+
+            val reactRoleId = ReactRole
+                .fromReactionEmoji(emoji, messageId)
+                ?.roleId
+                ?.let(::Snowflake)
+                ?: return@on
+
+            kord.rest.guild.deleteRoleFromGuildMember(
+                guildId = guild.id,
+                userId = user.id,
+                roleId = reactRoleId,
+                reason = "-Reaction role"
+            )
+        }
 
         kord.on<GuildMessageCommandInteractionCreateEvent> {
             val cmd = contextualCommands.getOrDefault(interaction.invokedCommandName, null)
