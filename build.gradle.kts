@@ -32,7 +32,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.4.7")
     implementation("org.jetbrains.kotlinx:kotlinx-cli-jvm:0.3.4")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
     implementation("dev.kord:kord-core:0.9.0")
     implementation("com.zaxxer", "HikariCP", "5.0.1")
