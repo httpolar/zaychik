@@ -1,4 +1,4 @@
-name: Build nad Publish
+name: Build and Publish
 
 on:
   push:
@@ -33,6 +33,6 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/')
       with:
         files: |
-          build/libs/zaychik-all.jar
+          '/home/runner/work/zaychik/zaychik/build/libs/zaychik-all.jar'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
