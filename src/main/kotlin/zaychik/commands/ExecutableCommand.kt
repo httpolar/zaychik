@@ -22,6 +22,7 @@ class ExecutableCommand<T : Event>(private val event: T) {
         val canRun = command.check(event)
         if (!canRun) {
             onCheckFailure.invoke(event)
+            return
         }
         command.action(event)
     }
