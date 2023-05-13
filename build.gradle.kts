@@ -25,10 +25,6 @@ kotlin {
     jvmToolchain(17)
 }
 
-tasks.shadowJar {
-    minimize()
-}
-
 dependencies {
     implementation("io.github.oshai", "kotlin-logging-jvm", "4.0.0-beta-28")
     implementation("ch.qos.logback", "logback-classic", "1.4.7")
