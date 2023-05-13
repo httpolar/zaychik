@@ -7,6 +7,7 @@ import dev.kord.core.behavior.MessageBehavior
 import dev.kord.core.behavior.RoleBehavior
 import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.entity.ReactionEmoji
+import dev.kord.core.entity.Role
 import dev.kord.core.event.channel.ChannelDeleteEvent
 import dev.kord.core.event.interaction.GuildMessageCommandInteractionCreateEvent
 import dev.kord.core.event.message.MessageDeleteEvent
@@ -26,9 +27,11 @@ import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import zaychik.commands.app.CreateReactRoleAppCommand
 import zaychik.commands.app.ViewReactRolesAppCommand
+import zaychik.commands.executableCommand
 import zaychik.db.ZaychikDatabase
 import zaychik.db.entities.ReactRole
 import zaychik.db.tables.ReactRolesTable
+import java.util.*
 
 class Zaychik(private val kord: Kord) {
     private val logger = KotlinLogging.logger {}
@@ -60,20 +63,24 @@ class Zaychik(private val kord: Kord) {
         guild: GuildBehavior?,
         message: MessageBehavior,
         emoji: ReactionEmoji,
-        block: suspend (RoleBehavior) -> Unit
-    ) {
-        if (guild == null) return
+        block: (suspend (RoleBehavior) -> Unit)? = null
+    ): Optional<Role> {
+        if (guild == null) return Optional.empty()
         val messageId = message.id.value
 
         val reactRoleId = ReactRole
             .fromReactionEmoji(emoji, messageId)
             ?.roleId
             ?.let(::Snowflake)
-            ?: return
+            ?: return Optional.empty()
 
-        val role = guild.roles.firstOrNull { r -> r.id == reactRoleId } ?: return
+        val role = guild.roles.firstOrNull { r -> r.id == reactRoleId } ?: return Optional.empty()
 
-        block(role)
+        if (block != null) {
+            block(role)
+        }
+
+        return Optional.of(role)
     }
 
     suspend fun start() {
@@ -92,11 +99,15 @@ class Zaychik(private val kord: Kord) {
             val cmd = appCommands.getOrDefault(interaction.invokedCommandName, null)
                 ?: return@on
 
-            cmd.checkAndRun(this) {
-                interaction.respondEphemeral {
-                    content = ":x: Missing permissions! You are not allowed to run this command."
+            executableCommand(this)
+                .command(cmd)
+                .onCheckFailure {
+                    interaction.respondEphemeral {
+                        content = ":x: Missing permissions! You are not allowed to run this command."
+
+                    }
                 }
-            }
+                .execute()
         }
 
         kord.on<ReactionAddEvent> {
@@ -107,6 +118,10 @@ class Zaychik(private val kord: Kord) {
 
         kord.on<ReactionRemoveEvent> {
             extractRoleFromReaction(guild, message, emoji) {
+                if (userAsMember?.asMember()?.roleIds?.contains(it.id) != true) {
+                    return@extractRoleFromReaction
+                }
+
                 userAsMember?.removeRole(it.id, "(-) Reaction Role Removed")
             }
         }
