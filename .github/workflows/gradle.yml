@@ -33,6 +33,6 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/')
       with:
         files: |
-          '/home/runner/work/zaychik/zaychik/build/libs/zaychik-all.jar'
+          'build/libs/zaychik-all.jar'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
