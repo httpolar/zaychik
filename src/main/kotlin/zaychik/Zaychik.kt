@@ -15,17 +15,15 @@ import dev.kord.core.event.message.ReactionAddEvent
 import dev.kord.core.event.message.ReactionRemoveEvent
 import dev.kord.core.on
 import dev.kord.gateway.Intents
-import dev.kord.rest.builder.interaction.role
-import dev.kord.rest.builder.interaction.subCommand
 import io.github.oshai.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import zaychik.commands.app.CreateReactRoleAppCommand
+import zaychik.commands.app.DeleteReactRolesAppCommand
 import zaychik.commands.app.ViewReactRolesAppCommand
 import zaychik.commands.executableCommand
 import zaychik.db.ZaychikDatabase
@@ -39,6 +37,7 @@ class Zaychik(private val kord: Kord) {
     private val appCommands = mapOf(
         CreateReactRoleAppCommand.name to CreateReactRoleAppCommand(),
         ViewReactRolesAppCommand.name to ViewReactRolesAppCommand(),
+        DeleteReactRolesAppCommand.name to DeleteReactRolesAppCommand(),
     )
 
     private suspend fun createAppCommands() {
