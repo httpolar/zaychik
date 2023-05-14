@@ -49,16 +49,6 @@ class Zaychik(private val kord: Kord) {
         }
     }
 
-    private suspend fun createSlashCommands() {
-        kord.createGlobalChatInputCommand(name = "react-role", description = "Reaction roles") {
-            subCommand(name = "create", description = "Creates a reaction role") {
-                role(name = "role", description = "Role that will be given to the user who clicks the reaction")
-            }
-            subCommand(name = "delete", description = "Deletes a reaction role")
-            subCommand(name = "find", description = "Searches for a reaction role or a message with it")
-        }
-    }
-
     private suspend fun extractRoleFromReaction(
         guild: GuildBehavior?,
         message: MessageBehavior,
