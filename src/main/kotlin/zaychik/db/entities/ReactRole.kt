@@ -32,6 +32,7 @@ class ReactRole(id: EntityID<UUID>) : UUIDEntity(id) {
     var messageId by ReactRolesTable.messageId
     var roleId by ReactRolesTable.roleId
     var emojiId by ReactRolesTable.emojiId
+    var isEmojiAnimated by ReactRolesTable.isEmojiAnimated
     var enabled by ReactRolesTable.enabled
 }
 

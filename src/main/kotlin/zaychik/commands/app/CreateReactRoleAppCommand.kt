@@ -129,6 +129,7 @@ class CreateReactRoleAppCommand : Command<GuildMessageCommandInteractionCreateEv
                 this.messageId = srcMessage.id.value
                 this.roleId = role.id.value
                 this.emojiId = reactionEmoji.id.value
+                this.isEmojiAnimated = reactionEmoji.isAnimated
                 this.enabled = true
             }
         }
