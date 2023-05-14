@@ -1,9 +1,7 @@
 package zaychik.commands.app
 
-import dev.kord.common.entity.DiscordPartialEmoji
 import dev.kord.common.entity.Permission
 import dev.kord.common.entity.Snowflake
-import dev.kord.common.entity.optional.OptionalBoolean
 import dev.kord.core.behavior.interaction.response.edit
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.ReactionEmoji
@@ -22,6 +20,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import zaychik.commands.Command
 import zaychik.db.entities.ReactRole
 import zaychik.db.tables.ReactRolesTable
+import zaychik.utils.partialEmoji
 import java.util.*
 import kotlin.time.Duration.Companion.seconds
 
@@ -66,11 +65,7 @@ class DeleteReactRolesAppCommand : Command<GuildMessageCommandInteractionCreateE
 
                     reactRoleEntriesAndRoles.forEach { (entry, role) ->
                         option("@${role?.name}", entry.id.toString()) {
-                            emoji = DiscordPartialEmoji(
-                                Snowflake(entry.emojiId),
-                                "x",
-                                OptionalBoolean.Value(entry.isEmojiAnimated)
-                            )
+                            emoji = partialEmoji(entry.emojiId, isAnimated = entry.isEmojiAnimated)
                         }
                     }
                 }
