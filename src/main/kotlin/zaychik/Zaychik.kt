@@ -88,9 +88,7 @@ class Zaychik(private val kord: Kord) {
 
         ZaychikDatabase.connect()
         newSuspendedTransaction(Dispatchers.IO) {
-            if (!ReactRolesTable.exists()) {
-                SchemaUtils.createMissingTablesAndColumns(ReactRolesTable)
-            }
+            SchemaUtils.createMissingTablesAndColumns(ReactRolesTable)
         }
 
         createAppCommands()
