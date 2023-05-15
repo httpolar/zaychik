@@ -26,17 +26,18 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import zaychik.commands.abstracts.ExecutableCommand
-import zaychik.commands.abstracts.SlashCommand
 import zaychik.commands.app.CreateReactRoleAppCommand
 import zaychik.commands.app.DeleteReactRolesAppCommand
 import zaychik.commands.app.ViewReactRolesAppCommand
 import zaychik.commands.abstracts.executableCommand
 import zaychik.commands.slash.ButtonRoleCreateSlashCommand
+import zaychik.commands.slash.UserInfoSlashCommand
 import zaychik.db.ZaychikDatabase
 import zaychik.db.entities.ReactRole
 import zaychik.db.tables.ButtonRoles
 import zaychik.db.tables.ReactRolesTable
 import java.util.*
+
 
 class Zaychik(private val kord: Kord) {
     private val logger = KotlinLogging.logger {}
@@ -47,9 +48,10 @@ class Zaychik(private val kord: Kord) {
         DeleteReactRolesAppCommand(),
     ).associateBy { it.name }
 
-    private val slashCommands = setOf<SlashCommand>(
+    private val slashCommands = setOf(
         ButtonRoleCreateSlashCommand(),
-    )
+        UserInfoSlashCommand()
+    ).associateBy { it.fullName }
 
     private suspend fun createAppCommands() {
         kord.createGlobalApplicationCommands {
@@ -60,7 +62,7 @@ class Zaychik(private val kord: Kord) {
     }
 
     private suspend fun createSlashCommands() {
-        val groupedCommands = slashCommands.groupBy { it.rootName }
+        val groupedCommands = slashCommands.values.groupBy { it.rootName }
 
         groupedCommands.forEach { (rootName, commands) ->
             if (rootName != null) {
@@ -137,7 +139,7 @@ class Zaychik(private val kord: Kord) {
                 else -> interaction.command.rootName
             }
 
-            val cmd = slashCommands.find { it.fullName == cmdFullname } ?: return@on
+            val cmd = slashCommands.getOrDefault(cmdFullname, null) ?: return@on
 
             ExecutableCommand(this)
                 .command(cmd)
