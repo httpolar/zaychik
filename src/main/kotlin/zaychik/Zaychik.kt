@@ -8,13 +8,16 @@ import dev.kord.core.behavior.RoleBehavior
 import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.entity.ReactionEmoji
 import dev.kord.core.entity.Role
+import dev.kord.core.entity.interaction.SubCommand
 import dev.kord.core.event.channel.ChannelDeleteEvent
+import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildMessageCommandInteractionCreateEvent
 import dev.kord.core.event.message.MessageDeleteEvent
 import dev.kord.core.event.message.ReactionAddEvent
 import dev.kord.core.event.message.ReactionRemoveEvent
 import dev.kord.core.on
 import dev.kord.gateway.Intents
+import dev.kord.rest.builder.interaction.subCommand
 import io.github.oshai.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
@@ -22,10 +25,13 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import zaychik.commands.ExecutableCommand
+import zaychik.commands.SlashCommand
 import zaychik.commands.app.CreateReactRoleAppCommand
 import zaychik.commands.app.DeleteReactRolesAppCommand
 import zaychik.commands.app.ViewReactRolesAppCommand
 import zaychik.commands.executableCommand
+import zaychik.commands.slash.ButtonRoleCreateSlashCommand
 import zaychik.db.ZaychikDatabase
 import zaychik.db.entities.ReactRole
 import zaychik.db.tables.ButtonRoles
@@ -41,10 +47,36 @@ class Zaychik(private val kord: Kord) {
         DeleteReactRolesAppCommand.name to DeleteReactRolesAppCommand(),
     )
 
+    private val slashCommands = setOf<SlashCommand>(
+        ButtonRoleCreateSlashCommand(),
+    )
+
     private suspend fun createAppCommands() {
         kord.createGlobalApplicationCommands {
             appCommands.keys.forEach {
                 message(name = it)
+            }
+        }
+    }
+
+    private suspend fun createSlashCommands() {
+        val groupedCommands = slashCommands.groupBy { it.rootName }
+
+        groupedCommands.forEach { (rootName, commands) ->
+            if (rootName != null) {
+                kord.createGlobalChatInputCommand(rootName, "Command group") {
+                    commands.forEach { command ->
+                        subCommand(command.name, command.description) {
+                            options = command.options
+                        }
+                    }
+                }
+            } else {
+                commands.forEach { command ->
+                    kord.createGlobalChatInputCommand(command.name, command.description) {
+                        options = command.options
+                    }
+                }
             }
         }
     }
@@ -82,6 +114,7 @@ class Zaychik(private val kord: Kord) {
         }
 
         createAppCommands()
+        createSlashCommands()
 
         kord.on<GuildMessageCommandInteractionCreateEvent> {
             val cmd = appCommands.getOrDefault(interaction.invokedCommandName, null)
@@ -96,6 +129,25 @@ class Zaychik(private val kord: Kord) {
                     }
                 }
                 .execute()
+        }
+
+        kord.on<GuildChatInputCommandInteractionCreateEvent> {
+            val cmdFullname = when (val cmd = interaction.command) {
+                is SubCommand -> "${cmd.rootName} ${cmd.name}"
+                else -> interaction.command.rootName
+            }
+
+            val cmd = slashCommands.find { it.fullName() == cmdFullname } ?: return@on
+
+            ExecutableCommand(this)
+                .command(cmd)
+                .onCheckFailure {
+                    it.interaction.respondEphemeral {
+                        content = "Missing Permissions! You are not allowed to run this command."
+                    }
+                }
+                .execute()
+
         }
 
         kord.on<ReactionAddEvent> {
