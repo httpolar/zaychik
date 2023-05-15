@@ -28,6 +28,7 @@ import zaychik.commands.app.ViewReactRolesAppCommand
 import zaychik.commands.executableCommand
 import zaychik.db.ZaychikDatabase
 import zaychik.db.entities.ReactRole
+import zaychik.db.tables.ButtonRoles
 import zaychik.db.tables.ReactRolesTable
 import java.util.*
 
@@ -77,7 +78,7 @@ class Zaychik(private val kord: Kord) {
 
         ZaychikDatabase.connect()
         newSuspendedTransaction(Dispatchers.IO) {
-            SchemaUtils.createMissingTablesAndColumns(ReactRolesTable)
+            SchemaUtils.createMissingTablesAndColumns(ReactRolesTable, ButtonRoles)
         }
 
         createAppCommands()
