@@ -137,7 +137,7 @@ class Zaychik(private val kord: Kord) {
                 else -> interaction.command.rootName
             }
 
-            val cmd = slashCommands.find { it.fullName() == cmdFullname } ?: return@on
+            val cmd = slashCommands.find { it.fullName == cmdFullname } ?: return@on
 
             ExecutableCommand(this)
                 .command(cmd)

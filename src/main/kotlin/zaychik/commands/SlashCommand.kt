@@ -10,8 +10,7 @@ abstract class SlashCommand : Command<GuildChatInputCommandInteractionCreateEven
     abstract val description: String
     abstract val options: MutableList<OptionsBuilder>?
 
-    fun fullName(): String {
-        if (rootName != null) return "$rootName $name"
-        return name
+    val fullName by lazy {
+        if (rootName != null) "$rootName $name" else name
     }
 }
