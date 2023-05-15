@@ -25,12 +25,12 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import zaychik.commands.ExecutableCommand
-import zaychik.commands.SlashCommand
+import zaychik.commands.abstracts.ExecutableCommand
+import zaychik.commands.abstracts.SlashCommand
 import zaychik.commands.app.CreateReactRoleAppCommand
 import zaychik.commands.app.DeleteReactRolesAppCommand
 import zaychik.commands.app.ViewReactRolesAppCommand
-import zaychik.commands.executableCommand
+import zaychik.commands.abstracts.executableCommand
 import zaychik.commands.slash.ButtonRoleCreateSlashCommand
 import zaychik.db.ZaychikDatabase
 import zaychik.db.entities.ReactRole
@@ -41,11 +41,11 @@ import java.util.*
 class Zaychik(private val kord: Kord) {
     private val logger = KotlinLogging.logger {}
 
-    private val appCommands = mapOf(
-        CreateReactRoleAppCommand.name to CreateReactRoleAppCommand(),
-        ViewReactRolesAppCommand.name to ViewReactRolesAppCommand(),
-        DeleteReactRolesAppCommand.name to DeleteReactRolesAppCommand(),
-    )
+    private val appCommands = setOf(
+        CreateReactRoleAppCommand(),
+        ViewReactRolesAppCommand(),
+        DeleteReactRolesAppCommand(),
+    ).associateBy { it.name }
 
     private val slashCommands = setOf<SlashCommand>(
         ButtonRoleCreateSlashCommand(),
@@ -53,8 +53,8 @@ class Zaychik(private val kord: Kord) {
 
     private suspend fun createAppCommands() {
         kord.createGlobalApplicationCommands {
-            appCommands.keys.forEach {
-                message(name = it)
+            appCommands.values.forEach {
+                message(name = it.name)
             }
         }
     }

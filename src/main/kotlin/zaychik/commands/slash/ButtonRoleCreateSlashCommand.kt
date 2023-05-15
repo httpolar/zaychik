@@ -9,7 +9,7 @@ import dev.kord.rest.builder.message.create.actionRow
 import dev.kord.rest.builder.message.create.allowedMentions
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import zaychik.commands.SlashCommand
+import zaychik.commands.abstracts.SlashCommand
 import zaychik.db.entities.ButtonRole
 
 class ButtonRoleCreateSlashCommand : SlashCommand() {

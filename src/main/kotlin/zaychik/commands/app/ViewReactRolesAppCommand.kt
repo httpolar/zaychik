@@ -6,14 +6,12 @@ import dev.kord.core.event.interaction.GuildMessageCommandInteractionCreateEvent
 import dev.kord.rest.builder.message.create.embed
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import zaychik.commands.Command
+import zaychik.commands.abstracts.AppCommand
 import zaychik.db.entities.ReactRole
 import zaychik.db.tables.ReactRolesTable
 
-class ViewReactRolesAppCommand : Command<GuildMessageCommandInteractionCreateEvent>() {
-    companion object {
-        const val name = "View React Roles"
-    }
+class ViewReactRolesAppCommand : AppCommand() {
+    override val name = "View React Roles"
 
     override suspend fun check(event: GuildMessageCommandInteractionCreateEvent): Boolean {
         return event.interaction.user.asMember().getPermissions().contains(Permission.ManageRoles)

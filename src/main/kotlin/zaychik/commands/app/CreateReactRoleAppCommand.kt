@@ -15,16 +15,14 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import zaychik.commands.Command
+import zaychik.commands.abstracts.AppCommand
 import zaychik.db.entities.ReactRole
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.time.Duration.Companion.seconds
 
-class CreateReactRoleAppCommand : Command<GuildMessageCommandInteractionCreateEvent>() {
-    companion object {
-        const val name = "Create React Role"
-    }
+class CreateReactRoleAppCommand : AppCommand() {
+    override val name = "Create React Role"
 
     override suspend fun check(event: GuildMessageCommandInteractionCreateEvent): Boolean {
         return event.interaction.user.asMember().getPermissions().values.contains(Permission.ManageRoles)

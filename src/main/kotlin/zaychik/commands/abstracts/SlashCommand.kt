@@ -1,4 +1,4 @@
-package zaychik.commands
+package zaychik.commands.abstracts
 
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.rest.builder.interaction.OptionsBuilder

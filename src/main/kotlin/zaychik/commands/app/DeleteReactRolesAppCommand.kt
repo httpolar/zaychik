@@ -17,18 +17,15 @@ import kotlinx.coroutines.flow.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import zaychik.commands.Command
+import zaychik.commands.abstracts.AppCommand
 import zaychik.db.entities.ReactRole
 import zaychik.db.tables.ReactRolesTable
 import zaychik.utils.partialEmoji
 import java.util.*
 import kotlin.time.Duration.Companion.seconds
 
-class DeleteReactRolesAppCommand : Command<GuildMessageCommandInteractionCreateEvent>() {
-    companion object : AppCommandCompanion {
-        override val name = "Delete React Roles"
-    }
-
+class DeleteReactRolesAppCommand : AppCommand() {
+    override val name = "Delete React Roles"
     override suspend fun check(event: GuildMessageCommandInteractionCreateEvent): Boolean {
         return event.interaction.user.asMember().getPermissions().contains(Permission.ManageRoles)
     }
