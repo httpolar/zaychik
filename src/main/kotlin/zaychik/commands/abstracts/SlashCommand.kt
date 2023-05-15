@@ -5,7 +5,7 @@ import dev.kord.rest.builder.interaction.OptionsBuilder
 
 
 abstract class SlashCommand : Command<GuildChatInputCommandInteractionCreateEvent>() {
-    abstract val rootName: String?
+    open val rootName: String? = null
     abstract val name: String
     abstract val description: String
     abstract val options: MutableList<OptionsBuilder>?
