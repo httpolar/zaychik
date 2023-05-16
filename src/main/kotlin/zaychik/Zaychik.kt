@@ -36,7 +36,6 @@ import zaychik.db.ZaychikDatabase
 import zaychik.db.entities.ReactRole
 import zaychik.db.tables.ButtonRoles
 import zaychik.db.tables.ReactRolesTable
-import java.util.*
 
 
 class Zaychik(private val kord: Kord) {
@@ -88,23 +87,23 @@ class Zaychik(private val kord: Kord) {
         message: MessageBehavior,
         emoji: ReactionEmoji,
         block: (suspend (RoleBehavior) -> Unit)? = null
-    ): Optional<Role> {
-        if (guild == null) return Optional.empty()
+    ): Role? {
+        if (guild == null) return null
         val messageId = message.id.value
 
         val reactRoleId = ReactRole
             .fromReactionEmoji(emoji, messageId)
             ?.roleId
             ?.let(::Snowflake)
-            ?: return Optional.empty()
+            ?: return null
 
-        val role = guild.roles.firstOrNull { r -> r.id == reactRoleId } ?: return Optional.empty()
+        val role = guild.roles.firstOrNull { r -> r.id == reactRoleId } ?: return null
 
         if (block != null) {
             block(role)
         }
 
-        return Optional.of(role)
+        return role
     }
 
     suspend fun start() {
