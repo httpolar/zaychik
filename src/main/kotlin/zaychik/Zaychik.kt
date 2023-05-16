@@ -133,12 +133,12 @@ class Zaychik(private val kord: Kord) {
         }
 
         kord.on<GuildChatInputCommandInteractionCreateEvent> {
-            val cmdFullname = when (val cmd = interaction.command) {
+            val cmdFullName = when (val cmd = interaction.command) {
                 is SubCommand -> "${cmd.rootName} ${cmd.name}"
                 else -> interaction.command.rootName
             }
 
-            val cmd = slashCommands.getOrDefault(cmdFullname, null) ?: return@on
+            val cmd = slashCommands.getOrDefault(cmdFullName, null) ?: return@on
 
             ExecutableCommand(this)
                 .command(cmd)
