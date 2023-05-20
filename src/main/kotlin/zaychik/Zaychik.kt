@@ -30,7 +30,6 @@ import zaychik.commands.app.CreateReactRoleAppCommand
 import zaychik.commands.app.DeleteReactRolesAppCommand
 import zaychik.commands.app.ViewReactRolesAppCommand
 import zaychik.commands.abstracts.executableCommand
-import zaychik.commands.slash.ButtonRoleCreateSlashCommand
 import zaychik.commands.slash.UserInfoSlashCommand
 import zaychik.db.ZaychikDatabase
 import zaychik.db.entities.ReactRole
@@ -48,7 +47,6 @@ class Zaychik(private val kord: Kord) {
     ).associateBy { it.name }
 
     private val slashCommands = setOf(
-        ButtonRoleCreateSlashCommand(),
         UserInfoSlashCommand()
     ).associateBy { it.fullName }
 
@@ -126,7 +124,6 @@ class Zaychik(private val kord: Kord) {
                 .onCheckFailure {
                     interaction.respondEphemeral {
                         content = ":x: Missing permissions! You are not allowed to run this command."
-
                     }
                 }
                 .execute()
@@ -144,7 +141,7 @@ class Zaychik(private val kord: Kord) {
                 .command(cmd)
                 .onCheckFailure {
                     it.interaction.respondEphemeral {
-                        content = "Missing Permissions! You are not allowed to run this command."
+                        content = ":x: Missing Permissions! You are not allowed to run this command."
                     }
                 }
                 .execute()
