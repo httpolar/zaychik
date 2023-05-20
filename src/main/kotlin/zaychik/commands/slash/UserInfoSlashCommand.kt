@@ -3,15 +3,20 @@ package zaychik.commands.slash
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.rest.builder.interaction.BooleanBuilder
-import dev.kord.rest.builder.interaction.MentionableBuilder
 import dev.kord.rest.builder.interaction.OptionsBuilder
+import dev.kord.rest.builder.interaction.UserBuilder
+import io.github.oshai.KotlinLogging
 import zaychik.commands.abstracts.SlashCommand
 import zaychik.extensions.deferResponse
 import zaychik.extensions.displayAvatar
 import zaychik.extensions.embedBuilder
+import zaychik.utils.ZaychikEmoji
+import zaychik.utils.mention
 
 
 class UserInfoSlashCommand : SlashCommand() {
+    private val logger = KotlinLogging.logger { }
+
     override val name = "userinfo"
     override val description = "Shows basic information about Discord users"
 
@@ -21,7 +26,7 @@ class UserInfoSlashCommand : SlashCommand() {
     }
 
     override val options: MutableList<OptionsBuilder> = mutableListOf(
-        MentionableBuilder(USER_OPT, "Discord user whose account information will be printed").apply {
+        UserBuilder(USER_OPT, "Discord user whose account information will be printed").apply {
             required = true
         },
         BooleanBuilder(IS_PRIVATE_OPT, "Makes Zaychik's response invisible to other users")
@@ -43,29 +48,26 @@ class UserInfoSlashCommand : SlashCommand() {
             return
         }
 
-        val embed = embedBuilder {
-            title = "${user.username}#${user.discriminator}"
+        val publicFlags = user.publicFlags
 
+        val member = user.asMemberOrNull(event.interaction.guildId)
+        val activities = member?.getPresenceOrNull()?.activities
+
+        val embed = embedBuilder {
             thumbnail {
                 url = user.displayAvatar().cdnUrl.toUrl()
             }
 
             field {
                 inline = true
-                name = "Name"
-                value = user.username
+                name = "User tag"
+                value = user.tag
             }
 
             field {
                 inline = true
-                name = "Discrim"
-                value = user.discriminator
-            }
-
-            field {
-                inline = true
-                name = "Created on"
-                value = "<t:" + user.id.timestamp.epochSeconds + ":D>"
+                name = "ID"
+                value = "${user.id.value}"
             }
 
             field {
@@ -96,12 +98,44 @@ class UserInfoSlashCommand : SlashCommand() {
                 }
             }
 
-            if (user.publicFlags != null) {
+            if (publicFlags != null && publicFlags.flags.isNotEmpty()) {
                 field {
-                    inline = true
-                    name = "Public Flags"
-                    value = user.publicFlags?.flags?.joinToString(separator = ", ") ?: "no flags :("
+                    inline = false
+                    name = "User Flags"
+                    value = publicFlags.flags.joinToString(separator = "\n") { it.name }
                 }
+            }
+
+
+            if (!activities.isNullOrEmpty()) {
+                activities.forEach {
+                    field {
+                        inline = false
+                        name = "${it.name} ${it.type}"
+                        value = "${it.details}"
+                    }
+                }
+            }
+
+            if (member != null && member.roleIds.isNotEmpty()) {
+                field {
+                    inline = false
+                    name = "Roles"
+                    value = member.roleBehaviors.joinToString(" ") { "<@&${it.id.value}>" }
+                }
+            }
+
+            if (member != null) {
+                field {
+                    inline = false
+                    name = "Server join date"
+                    value = "${ZaychikEmoji.STOPWATCH?.mention()} <t:" + member.joinedAt.epochSeconds + ":F>"
+                }
+            }
+
+            field {
+                name = "Account creation date"
+                value = "${ZaychikEmoji.STOPWATCH?.mention()} <t:" + user.id.timestamp.epochSeconds + ":F>"
             }
         }
 
