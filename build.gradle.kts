@@ -1,6 +1,6 @@
 val mainPath = "zaychik.MainKt"
 
-val koinVersion = "3.4.0"
+val koinVersion = "3.4.1"
 val exposedVersion = "0.41.1"
 
 fun kotlinx(name: String, version: String) = "org.jetbrains.kotlinx:kotlinx-$name:$version"
@@ -27,7 +27,7 @@ kotlin {
 }
 
 dependencies {
-    implementation("io.github.oshai", "kotlin-logging-jvm", "4.0.0-beta-28")
+    implementation("io.github.oshai", "kotlin-logging-jvm", "4.0.0-beta-29")
     implementation("ch.qos.logback", "logback-classic", "1.4.7")
     implementation(kotlinx("cli-jvm", "0.3.5"))
     implementation(kotlinx("datetime", "0.4.0"))
