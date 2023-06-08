@@ -1,6 +1,6 @@
 val mainPath = "zaychik.MainKt"
 
-val koinVersion = "3.4.1"
+val koinVersion = "3.4.2"
 val exposedVersion = "0.41.1"
 
 fun kotlinx(name: String, version: String) = "org.jetbrains.kotlinx:kotlinx-$name:$version"
