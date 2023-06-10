@@ -35,5 +35,6 @@ jobs:
         files: |
           **/*/zaychik-all.jar
           **/*/zaychik.jar
+          **/*/docker-compose.yml
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
