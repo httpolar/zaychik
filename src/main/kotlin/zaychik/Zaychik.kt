@@ -18,7 +18,7 @@ import dev.kord.core.event.message.ReactionRemoveEvent
 import dev.kord.core.on
 import dev.kord.gateway.Intents
 import dev.kord.rest.builder.interaction.subCommand
-import io.github.oshai.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import org.jetbrains.exposed.sql.SchemaUtils

@@ -5,7 +5,7 @@ import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEve
 import dev.kord.rest.builder.interaction.BooleanBuilder
 import dev.kord.rest.builder.interaction.OptionsBuilder
 import dev.kord.rest.builder.interaction.UserBuilder
-import io.github.oshai.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import zaychik.commands.abstracts.SlashCommand
 import zaychik.extensions.deferResponse
 import zaychik.extensions.displayAvatar

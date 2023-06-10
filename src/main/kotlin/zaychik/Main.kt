@@ -1,7 +1,7 @@
 package zaychik
 
 import dev.kord.core.Kord
-import io.github.oshai.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.runBlocking
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
