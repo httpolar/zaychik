@@ -10,4 +10,5 @@ services:
         source: ./
         target: /opt/app
     working_dir: /opt/app
+    network_mode: host
     command: ['java', '-XX:+UseZGC', '-Xmx512M', '-jar', 'zaychik.jar']
