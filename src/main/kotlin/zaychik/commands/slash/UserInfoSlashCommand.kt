@@ -61,7 +61,11 @@ class UserInfoSlashCommand : SlashCommand() {
             field {
                 inline = true
                 name = "User tag"
-                value = user.tag
+                value = user.username
+
+                if (user.discriminator.length >= 4) {
+                    value += "#" + user.discriminator
+                }
             }
 
             field {
