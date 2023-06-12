@@ -8,7 +8,7 @@ abstract class SlashCommand : Command<GuildChatInputCommandInteractionCreateEven
     open val rootName: String? = null
     abstract val name: String
     abstract val description: String
-    abstract val options: MutableList<OptionsBuilder>?
+    open val options: MutableList<OptionsBuilder>? = null
 
     val fullName by lazy {
         if (rootName != null) "$rootName $name" else name
