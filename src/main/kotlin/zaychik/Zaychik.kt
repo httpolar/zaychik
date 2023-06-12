@@ -30,6 +30,7 @@ import zaychik.commands.app.CreateReactRoleAppCommand
 import zaychik.commands.app.DeleteReactRolesAppCommand
 import zaychik.commands.app.ViewReactRolesAppCommand
 import zaychik.commands.abstracts.executableCommand
+import zaychik.commands.slash.CatSlashCommand
 import zaychik.commands.slash.UserInfoSlashCommand
 import zaychik.db.ZaychikDatabase
 import zaychik.db.entities.ReactRole
@@ -46,7 +47,8 @@ class Zaychik(private val kord: Kord) {
     ).associateBy { it.name }
 
     private val slashCommands = setOf(
-        UserInfoSlashCommand()
+        UserInfoSlashCommand(),
+        CatSlashCommand(),
     ).associateBy { it.fullName }
 
     private suspend fun createAppCommands() {
