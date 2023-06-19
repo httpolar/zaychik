@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   zaychik:
-    image: eclipse-temurin:17-alpine
+    image: eclipse-temurin:20-alpine
     container_name: zaychik
     restart: unless-stopped
     volumes:
@@ -11,4 +11,4 @@ services:
         target: /opt/app
     working_dir: /opt/app
     network_mode: host
-    command: ['java', '-XX:+UseZGC', '-Xmx512M', '-jar', 'zaychik.jar']
+    command: ['java', '-XX:+UseShenandoahGC', '-Xmx512M', '-jar', 'zaychik.jar']
