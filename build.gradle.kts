@@ -28,7 +28,7 @@ kotlin {
 
 dependencies {
     implementation("io.github.oshai", "kotlin-logging-jvm", "4.0.0-beta-29")
-    implementation("ch.qos.logback", "logback-classic", "1.4.7")
+    implementation("ch.qos.logback", "logback-classic", "1.4.8")
     implementation(kotlinx("cli-jvm", "0.3.5"))
     implementation(kotlinx("datetime", "0.4.0"))
     implementation(kotlinx("coroutines-core", "1.7.1"))
