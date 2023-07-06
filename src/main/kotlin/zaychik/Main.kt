@@ -16,7 +16,7 @@ fun zaychikModule() = module {
 }
 
 fun kordFactory() = runBlocking {
-    logger.info("Created an instance of Kord")
+    logger.info { "Created an instance of Kord" }
     return@runBlocking Kord(Config.Bot.token)
 }
 

@@ -106,7 +106,7 @@ class Zaychik(private val kord: Kord) {
     }
 
     suspend fun start() {
-        logger.info("Zaychik is starting!")
+        logger.info { "Zaychik is starting" }
 
         ZaychikDatabase.connect()
         newSuspendedTransaction(Dispatchers.IO) {
