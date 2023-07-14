@@ -4,6 +4,7 @@ import dev.kord.common.entity.Permission
 import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.event.interaction.GuildMessageCommandInteractionCreateEvent
 import dev.kord.rest.builder.message.create.embed
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import zaychik.commands.abstracts.AppCommand
@@ -21,7 +22,7 @@ class ViewReactRolesAppCommand : AppCommand() {
         val message = event.interaction.target
 
         val reactRoles = newSuspendedTransaction(Dispatchers.IO) {
-            ReactRole.find { ReactRolesTable.messageId eq message.id.value }.toList()
+            ReactRole.find { ReactRolesTable.messageId eq message.id.value }.toImmutableList()
         }
 
         if (reactRoles.isEmpty()) {
@@ -30,7 +31,7 @@ class ViewReactRolesAppCommand : AppCommand() {
             }
         }
 
-        val emojis = message.asMessage().reactions.toList()
+        val emojis = message.asMessage().reactions.toImmutableList()
 
         val responseContent = StringBuilder()
         reactRoles.forEach {

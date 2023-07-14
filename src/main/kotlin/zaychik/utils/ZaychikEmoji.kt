@@ -2,10 +2,11 @@ package zaychik.utils
 
 import dev.kord.common.entity.DiscordPartialEmoji
 import dev.kord.common.entity.optional.value
+import kotlinx.collections.immutable.toImmutableMap
 import kotlin.reflect.KProperty
 
 object ZaychikEmoji {
-    private val emojis = listOf(
+    private val emojis = sequenceOf(
         partialEmoji("<:stopWatch:742284257958821909>"),
         partialEmoji("<:textChannel:741562093563543622>"),
         partialEmoji("<:voiceChannel:741562093546766476>"),
@@ -16,7 +17,7 @@ object ZaychikEmoji {
         partialEmoji("<:spotify:811177806293762069>"),
         partialEmoji("<:owner:741592025060605973>"),
         partialEmoji("<:members:741604275481870376>"),
-    ).associateBy { it.name?.lowercase() }
+    ).associateBy { it.name?.lowercase() }.toImmutableMap()
 
     operator fun get(key: String): DiscordPartialEmoji? = emojis[key.lowercase()]
 

@@ -19,6 +19,7 @@ import dev.kord.core.on
 import dev.kord.gateway.Intents
 import dev.kord.rest.builder.interaction.subCommand
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -40,16 +41,16 @@ import zaychik.db.tables.ReactRolesTable
 class Zaychik(private val kord: Kord) {
     private val logger = KotlinLogging.logger {}
 
-    private val appCommands = setOf(
+    private val appCommands = sequenceOf(
         CreateReactRoleAppCommand(),
         ViewReactRolesAppCommand(),
         DeleteReactRolesAppCommand(),
-    ).associateBy { it.name }
+    ).associateBy { it.name }.toImmutableMap()
 
-    private val slashCommands = setOf(
+    private val slashCommands = sequenceOf(
         UserInfoSlashCommand(),
         CatSlashCommand(),
-    ).associateBy { it.fullName }
+    ).associateBy { it.fullName }.toImmutableMap()
 
     private suspend fun createAppCommands() {
         kord.createGlobalApplicationCommands {
