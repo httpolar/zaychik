@@ -30,13 +30,14 @@ kotlin {
 }
 
 dependencies {
-    implementation("io.github.oshai", "kotlin-logging-jvm", "5.0.0-beta-02")
+    implementation("io.github.oshai", "kotlin-logging-jvm", "5.0.0-beta-04")
     implementation("ch.qos.logback", "logback-classic", "1.4.8")
     implementation(kotlinx("cli-jvm", "0.3.5"))
     implementation(kotlinx("datetime", "0.4.0"))
     implementation(kotlinx("coroutines-core", "1.7.2"))
     implementation(kotlinx("serialization-json", "1.5.1"))
-    implementation("dev.kord", "kord-core", "0.9.0")
+    implementation(kotlinx("collections-immutable", "0.3.5"))
+    implementation("dev.kord", "kord-core", "0.10.0")
     implementation("com.zaxxer", "HikariCP", "5.0.1")
     implementation("org.postgresql", "postgresql", "42.6.0")
     implementation("org.jetbrains.exposed", "exposed-core", exposedVersion)
