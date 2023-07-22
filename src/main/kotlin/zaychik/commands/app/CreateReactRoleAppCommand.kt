@@ -10,6 +10,7 @@ import dev.kord.core.event.interaction.GuildSelectMenuInteractionCreateEvent
 import dev.kord.core.event.message.ReactionAddEvent
 import dev.kord.rest.builder.message.create.actionRow
 import dev.kord.rest.request.RestRequestException
+import java.util.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
@@ -17,9 +18,9 @@ import kotlinx.coroutines.flow.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import zaychik.commands.abstracts.AppCommand
 import zaychik.db.entities.ReactRole
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.time.Duration.Companion.seconds
+
 
 class CreateReactRoleAppCommand : AppCommand() {
     override val name = "Create React Role"
