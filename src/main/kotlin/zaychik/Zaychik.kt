@@ -19,7 +19,7 @@ import dev.kord.core.on
 import dev.kord.gateway.Intents
 import dev.kord.rest.builder.interaction.subCommand
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.collections.immutable.persistentHashMapOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -27,10 +27,12 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import zaychik.commands.abstracts.ExecutableCommand
+import zaychik.commands.abstracts.appCommand
 import zaychik.commands.app.CreateReactRoleAppCommand
 import zaychik.commands.app.DeleteReactRolesAppCommand
 import zaychik.commands.app.ViewReactRolesAppCommand
 import zaychik.commands.abstracts.executableCommand
+import zaychik.commands.abstracts.slashCommand
 import zaychik.commands.slash.CatSlashCommand
 import zaychik.commands.slash.UserInfoSlashCommand
 import zaychik.db.ZaychikDatabase
@@ -41,16 +43,16 @@ import zaychik.db.tables.ReactRolesTable
 class Zaychik(private val kord: Kord) {
     private val logger = KotlinLogging.logger {}
 
-    private val appCommands = sequenceOf(
-        CreateReactRoleAppCommand(),
-        ViewReactRolesAppCommand(),
-        DeleteReactRolesAppCommand(),
-    ).associateBy { it.name }.toImmutableMap()
+    private val appCommands = persistentHashMapOf(
+        appCommand<CreateReactRoleAppCommand>(),
+        appCommand<ViewReactRolesAppCommand>(),
+        appCommand<DeleteReactRolesAppCommand>()
+    )
 
-    private val slashCommands = sequenceOf(
-        UserInfoSlashCommand(),
-        CatSlashCommand(),
-    ).associateBy { it.fullName }.toImmutableMap()
+    private val slashCommands = persistentHashMapOf(
+        slashCommand<UserInfoSlashCommand>(),
+        slashCommand<CatSlashCommand>(),
+    )
 
     private suspend fun createAppCommands() {
         kord.createGlobalApplicationCommands {
