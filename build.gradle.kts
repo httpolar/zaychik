@@ -2,8 +2,8 @@ import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 
 val mainPath = "zaychik.MainKt"
 
-val koinVersion = "3.4.2"
-val exposedVersion = "0.41.1"
+val koinVersion = "3.4.3"
+val exposedVersion = "0.42.0"
 
 fun kotlinx(name: String, version: String) = "org.jetbrains.kotlinx:kotlinx-$name:$version"
 
@@ -30,11 +30,11 @@ kotlin {
 }
 
 dependencies {
-    implementation("io.github.oshai", "kotlin-logging-jvm", "5.0.0")
+    implementation("io.github.oshai", "kotlin-logging-jvm", "5.0.1")
     implementation("ch.qos.logback", "logback-classic", "1.4.8")
     implementation(kotlinx("cli-jvm", "0.3.5"))
     implementation(kotlinx("datetime", "0.4.0"))
-    implementation(kotlinx("coroutines-core", "1.7.2"))
+    implementation(kotlinx("coroutines-core", "1.7.3"))
     implementation(kotlinx("serialization-json", "1.5.1"))
     implementation(kotlinx("collections-immutable", "0.3.5"))
     implementation("dev.kord", "kord-core", "0.10.0")
