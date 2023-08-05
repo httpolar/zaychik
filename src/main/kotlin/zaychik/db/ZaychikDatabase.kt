@@ -17,9 +17,8 @@ object ZaychikDatabase {
 
     @JvmStatic
     val hikariConfig = HikariConfig().apply {
-        jdbcUrl = Config.Hikari.jdbcUrl()
-        username = Config.Hikari.user
-        password = Config.Hikari.password
+        jdbcUrl = Config.Hikari.jdbcUrl
+        driverClassName = Config.Hikari.driverClass
         maximumPoolSize = 10
     }
 

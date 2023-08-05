@@ -35,6 +35,7 @@ dependencies {
     implementation(libs.logger)
     implementation(libs.kord)
     implementation(libs.hikari)
+    implementation(libs.sqlite)
     implementation(libs.postgresql)
     implementation(libs.exposed.core)
     implementation(libs.exposed.dao)
