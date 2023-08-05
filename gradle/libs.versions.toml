@@ -1,0 +1,28 @@
+[versions]
+kotlin = "1.9.0"
+exposed = "0.42.0"
+koin = "3.4.3"
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
+dep-versions = { id = "com.github.ben-manes.versions", version = "0.47.0" }
+
+[libraries]
+cli = { module = "org.jetbrains.kotlinx:kotlinx-cli-jvm", version = "0.3.5" }
+koin = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+kord = { module = "dev.kord:kord-core", version = "0.10.0" }
+logger = { module = "io.github.oshai:kotlin-logging-jvm", version = "5.0.2" }
+logger-backend = { module = "ch.qos.logback:logback-classic", version = "1.4.9" }
+coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.7.3" }
+datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
+serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.5.1" }
+immutable-collections = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version = "0.3.5" }
+hikari = { module = "com.zaxxer:HikariCP", version = "5.0.1" }
+postgresql = { module = "org.postgresql:postgresql", version = "42.6.0" }
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
+
