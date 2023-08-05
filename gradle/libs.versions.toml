@@ -21,6 +21,7 @@ serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-jso
 immutable-collections = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version = "0.3.5" }
 hikari = { module = "com.zaxxer:HikariCP", version = "5.0.1" }
 postgresql = { module = "org.postgresql:postgresql", version = "42.6.0" }
+sqlite = {module = "org.xerial:sqlite-jdbc", version = "3.42.0.0"}
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
