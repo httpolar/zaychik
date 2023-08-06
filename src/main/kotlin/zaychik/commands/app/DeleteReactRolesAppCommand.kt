@@ -9,29 +9,28 @@ import dev.kord.core.event.interaction.GuildMessageCommandInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildSelectMenuInteractionCreateEvent
 import dev.kord.rest.builder.component.option
 import dev.kord.rest.builder.message.modify.actionRow
+import java.util.UUID
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import zaychik.commands.abstracts.AppCommand
 import zaychik.db.entities.ReactRole
 import zaychik.db.tables.ReactRolesTable
+import zaychik.extensions.waitFor
 import zaychik.utils.partialEmoji
-import java.util.*
-import kotlin.time.Duration.Companion.seconds
+
 
 class DeleteReactRolesAppCommand : AppCommand() {
     override val name = "Delete React Roles"
+
     override suspend fun check(event: GuildMessageCommandInteractionCreateEvent): Boolean {
         return event.interaction.user.asMember().getPermissions().contains(Permission.ManageRoles)
     }
 
-    @OptIn(FlowPreview::class)
     override suspend fun action(event: GuildMessageCommandInteractionCreateEvent) {
+        val kord = event.kord
         val guild = event.interaction.guild
         val user = event.interaction.user
         val srcMessage = event.interaction.target
@@ -69,26 +68,24 @@ class DeleteReactRolesAppCommand : AppCommand() {
             }
         }
 
-        val selectMenuSubmission = event.kord.events.buffer(Channel.UNLIMITED)
-            .filterIsInstance<GuildSelectMenuInteractionCreateEvent>()
-            .filter { it.interaction.user.id == user.id && it.interaction.component.customId == reactRoleSelectId }
-            .take(1)
-            .map { Result.success(it.interaction) }
-            .timeout(90.seconds)
-            .catch { emit(Result.failure(it)) }
-            .first()
-
-        if (selectMenuSubmission.isFailure) {
-            if (selectMenuSubmission.exceptionOrNull() is TimeoutCancellationException) {
-                selectMenuResponse.edit {
-                    content = "Timed out! Please, try again."
-                    components = mutableListOf()
-                }
-                return
-            }
+        val selectMenuResult = kord.waitFor<GuildSelectMenuInteractionCreateEvent> {
+            it.interaction.user.id == user.id && it.interaction.component.customId == reactRoleSelectId
         }
 
-        val selectedReactRoleIds = selectMenuSubmission.getOrThrow().values
+        val selectMenuEvent = selectMenuResult.getOrNull()
+
+        if (selectMenuEvent == null) {
+            selectMenuResponse.edit {
+                content = when (selectMenuResult.exceptionOrNull()) {
+                    is TimeoutCancellationException -> ":warning: Timed out! Please, try again."
+                    else -> ":warning: Something went wrong! Please, try again."
+                }
+                components = mutableListOf()
+            }
+            return
+        }
+
+        val selectedReactRoleIds = selectMenuEvent.interaction.values
         val selectedReactRoles = reactRoleEntriesAndRoles.filter { (entry, _) ->
             selectedReactRoleIds.contains("${entry.id}")
         }
