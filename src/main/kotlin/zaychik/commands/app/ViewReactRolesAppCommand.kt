@@ -1,9 +1,9 @@
 package zaychik.commands.app
 
 import dev.kord.common.entity.Permission
-import dev.kord.core.behavior.interaction.respondEphemeral
+import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildMessageCommandInteractionCreateEvent
-import dev.kord.rest.builder.message.create.embed
+import dev.kord.rest.builder.message.modify.embed
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -19,6 +19,7 @@ class ViewReactRolesAppCommand : AppCommand() {
     }
 
     override suspend fun action(event: GuildMessageCommandInteractionCreateEvent) {
+        val deferredResponse = event.interaction.deferEphemeralResponse()
         val message = event.interaction.target
 
         val reactRoles = newSuspendedTransaction(Dispatchers.IO) {
@@ -26,30 +27,32 @@ class ViewReactRolesAppCommand : AppCommand() {
         }
 
         if (reactRoles.isEmpty()) {
-            event.interaction.respondEphemeral {
+            deferredResponse.respond {
                 content = ":x: This message has no reaction roles attached to it."
             }
+            return
         }
 
         val emojis = message.asMessage().reactions.toImmutableList()
 
-        val responseContent = StringBuilder()
-        reactRoles.forEach {
-            val uuid = "`${it.id}`"
-            val role = "<@&${it.roleId}>"
+        val responseContent = buildString {
+            reactRoles.forEach {
+                val uuid = "`${it.id}`"
+                val role = "<@&${it.roleId}>"
 
-            val emoji = emojis
-                .firstOrNull { r -> r.id?.value == it.emojiId }
-                ?.emoji
-                ?.mention
+                val emoji = emojis
+                    .firstOrNull { r -> r.id?.value == it.emojiId }
+                    ?.emoji
+                    ?.mention
 
-            responseContent.appendLine("$uuid | $emoji -> $role")
+                appendLine("$uuid | $emoji -> $role")
+            }
         }
 
-        event.interaction.respondEphemeral {
+        deferredResponse.respond {
             embed {
                 title = "List of reaction roles"
-                description = responseContent.toString()
+                description = responseContent
             }
         }
     }
