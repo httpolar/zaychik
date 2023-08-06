@@ -1,5 +1,6 @@
 package zaychik
 
+import com.zaxxer.hikari.HikariDataSource
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.GuildBehavior
@@ -22,6 +23,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.collections.immutable.persistentHashMapOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
+import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
@@ -35,12 +37,15 @@ import zaychik.commands.abstracts.executableCommand
 import zaychik.commands.abstracts.slashCommand
 import zaychik.commands.slash.CatSlashCommand
 import zaychik.commands.slash.UserInfoSlashCommand
-import zaychik.db.ZaychikDatabase
 import zaychik.db.entities.ReactRole
 import zaychik.db.tables.ReactRolesTable
+import zaychik.extensions.inject
 
 
-class Zaychik(private val kord: Kord) {
+class Zaychik {
+    private val kord: Kord by inject()
+    private val hikariDataSource: HikariDataSource by inject()
+
     private val logger = KotlinLogging.logger {}
 
     private val appCommands = persistentHashMapOf(
@@ -51,7 +56,7 @@ class Zaychik(private val kord: Kord) {
 
     private val slashCommands = persistentHashMapOf(
         slashCommand<UserInfoSlashCommand>(),
-        slashCommand<CatSlashCommand>(),
+        slashCommand<CatSlashCommand>()
     )
 
     private suspend fun createAppCommands() {
@@ -111,7 +116,8 @@ class Zaychik(private val kord: Kord) {
     suspend fun start() {
         logger.info { "Zaychik is starting" }
 
-        ZaychikDatabase.connect()
+        Database.connect(hikariDataSource)
+
         newSuspendedTransaction(Dispatchers.IO) {
             SchemaUtils.createMissingTablesAndColumns(ReactRolesTable)
         }

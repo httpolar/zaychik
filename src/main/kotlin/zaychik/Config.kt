@@ -5,7 +5,7 @@ import java.io.File
 import java.util.Properties
 import kotlin.system.exitProcess
 
-object Config {
+class Config(private val path: String) {
     private val logger = KotlinLogging.logger {}
 
     private val properties = Properties().apply {
@@ -15,17 +15,16 @@ object Config {
         setProperty("hikari.driverClass", "org.sqlite.JDBC")
     }
 
-    object Bot {
-        val token: String = properties.getProperty("bot.token")
-        val guild: String = properties.getProperty("bot.guild")
+    init {
+        load()
     }
 
-    object Hikari {
-        val jdbcUrl: String = properties.getProperty("hikari.jdbc")
-        val driverClass: String = properties.getProperty("hikari.driverClass")
-    }
+    val token: String = properties.getProperty("bot.token")
+    val guild: String = properties.getProperty("bot.guild")
+    val jdbcUrl: String = properties.getProperty("hikari.jdbc")
+    val driverClass: String = properties.getProperty("hikari.driverClass")
 
-    fun load(path: String = "config.properties") {
+    private fun load() {
         val f = File(path)
         if (f.exists()) {
             properties.load(f.reader())
