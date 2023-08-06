@@ -26,7 +26,8 @@ kotlin {
 
 dependencies {
     implementation(libs.cli)
-    implementation(libs.koin)
+    implementation(libs.koin.core)
+    implementation(libs.koin.coroutines)
     implementation(libs.coroutines)
     implementation(libs.datetime)
     implementation(libs.serialization.json)
