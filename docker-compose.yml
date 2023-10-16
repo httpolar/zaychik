@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   zaychik:
-    image: eclipse-temurin:20-alpine
+    image: eclipse-temurin:21-alpine
     container_name: zaychik
     restart: unless-stopped
     volumes:
