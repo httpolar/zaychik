@@ -18,6 +18,7 @@ import dev.kord.core.event.message.ReactionAddEvent
 import dev.kord.core.event.message.ReactionRemoveEvent
 import dev.kord.core.on
 import dev.kord.gateway.Intents
+import dev.kord.gateway.NON_PRIVILEGED
 import dev.kord.rest.builder.interaction.subCommand
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.collections.immutable.persistentHashMapOf
@@ -189,7 +190,7 @@ class Zaychik {
         }
 
         kord.login {
-            intents = Intents.nonPrivileged
+            intents = Intents.NON_PRIVILEGED
         }
     }
 }
