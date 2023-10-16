@@ -102,11 +102,11 @@ class UserInfoSlashCommand : SlashCommand() {
                 }
             }
 
-            if (publicFlags != null && publicFlags.flags.isNotEmpty()) {
+            if (publicFlags != null && publicFlags.values.isNotEmpty()) {
                 field {
                     inline = false
                     name = "User Flags"
-                    value = publicFlags.flags.joinToString(separator = "\n") { it.name }
+                    value = publicFlags.values.joinToString(", ", transform = { it.toString() })
                 }
             }
 
