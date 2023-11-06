@@ -21,7 +21,7 @@ repositories {
 
 kotlin {
     K2JVMCompilerArguments().useK2 = true
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 dependencies {
